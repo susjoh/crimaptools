@@ -9,7 +9,7 @@
 #' is equivalent for for first 5 to 6 columns of a PLINK .ped file.
 
 
-pedigree.format <- function(ped, pedigree.type = "simple"){   # "plink"
+formatPedigree <- function(ped, pedigree.type = "simple"){   # "plink"
 
   simple.ped.name.rules <- function(){
     writeLines("Pedigree columns must be named as follows:
