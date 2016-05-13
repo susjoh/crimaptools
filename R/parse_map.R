@@ -1,8 +1,8 @@
-#' parseMap: Parse map from CriMAP map output
+#' parse_map: Parse map from CriMAP map output
 #' @param mapfile File with output from map
 
 
-parseMap <- function(mapfile){
+parse_map <- function(mapfile){
 
   x <- readLines(mapfile)
   map <- x[grep("Sex-specific map", x):length(x)]

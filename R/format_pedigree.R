@@ -1,4 +1,4 @@
-#' Format Pedigree
+#' format_pedigree: Format Pedigree
 #' This function formats the pedigree for downstream analysis.
 #' @param ped Pedigree object in "simple" format (Three columns for ANIMAL,
 #' MOTHER and FATHER) or in "plink" format (Five to Six columns for FAMILY,
@@ -9,7 +9,7 @@
 #' is equivalent for for first 5 to 6 columns of a PLINK .ped file.
 
 
-formatPedigree <- function(ped, pedigree.type = "simple"){   # "plink"
+format_pedigree <- function(ped, pedigree.type = "simple"){   # "plink"
 
   simple.ped.name.rules <- function(){
     writeLines("Pedigree columns must be named as follows:

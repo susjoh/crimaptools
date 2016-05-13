@@ -2,7 +2,7 @@
 # pedigree must be in format ANIMAL FATHER MOTHER with those headers
 # unix tools required on system: fgrep, sed
 
-#' genabelSubset: Subset a genabel dataset based on specified criteria.
+#' create_crimap_input: Subset a genabel dataset based on specified criteria.
 #' @param gwaa.data GenABEL gwaa.data to subset
 #' @param chr vector, optional: retain SNPs on particular chromosome(s)
 #' @param ped data.frame with pedigree.
@@ -24,7 +24,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-createCrimapFile <- function(gwaa.data,
+create_crimap_input <- function(gwaa.data,
                               familyPedigree,
                               analysisID,
                               snplist = NULL,

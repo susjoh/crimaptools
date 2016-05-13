@@ -1,8 +1,8 @@
-#' parseFlips: Parse output from CriMAP flips
+#' parse_flips: Parse output from CriMAP flips
 #' @param flipsfile File with output from flips.
 
 
-parseFlips <- function(flipsfile){
+parse_flips <- function(flipsfile){
 
   test2 <- readLines(flipsfile)
   if(length(grep("LOG_LIKE DECREASED IN", test2) > 0)) test2 <- test2[-grep("LOG_LIKE DECREASED IN", test2)]

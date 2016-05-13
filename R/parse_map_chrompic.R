@@ -1,8 +1,8 @@
-#' parseMapChrompic: Parse map from CriMAP chrompic output
+#' parse_map_chrompic: Parse map from CriMAP chrompic output
 #' @param chrompicfile File with output from chrompic
 
 
-parseMapChrompic <- function(chrompicfile){
+parse_map_chrompic <- function(chrompicfile){
 
   x <- readLines(chrompicfile)
   map <- x[grep("Sex_averaged", x):length(x)]

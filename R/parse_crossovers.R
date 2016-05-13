@@ -1,8 +1,8 @@
-#' parseCrossovers: Parse crossover information from CriMAP chrompic output
+#' parse_crossovers: Parse crossover information from CriMAP chrompic output
 #' @param chrompicfile File with output from chrompic
 
 
-parseCrossovers <- function(chrompicfile){
+parse_crossovers <- function(chrompicfile){
   #~~ read lines from the chrompic file
 
   x <- readLines(chrompicfile)
