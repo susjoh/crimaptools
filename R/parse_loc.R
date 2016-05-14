@@ -1,5 +1,5 @@
-#' parse_log: Parse output from CriMAP .loc files
-#' @param locfile
+#' parse_loc: Parse output from CriMAP .loc files
+#' @param locfile .loc file
 #' @export
 
 
