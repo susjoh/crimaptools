@@ -2,8 +2,8 @@
 devtools::document()
 data(deer)
 
-create_crimap_input (deer.abel, deer.famped, analysisID = "1a", snplist = snpnames(deer.abel)[1:3], outdir = "crimap")
-
+create_crimap_input (deer.abel, deer.famped, analysisID = "1a", chr = 1, outdir = "crimap", clear.existing.analysisID = TRUE)
+run_crimap_prepare("crimap2504.exe", "crimap/chr1a.gen")
 
 library(crimaptools)
 

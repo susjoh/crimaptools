@@ -86,7 +86,8 @@ create_crimap_input <- function(gwaa.data,
 
     if(Sys.info()["sysname"] == "Windows") {
 
-      system("cmd", input = paste0("del ", out.path.stem, ".*"), show.output.on.console = FALSE)
+      out.path.stem <- gsub("/", "\\\\", out.path.stem)
+      system("cmd", input = paste0("del ", out.path.stem, ".*"), show.output.on.console = T)
     } else {
       system(paste0("del ", out.path.stem, ".*"), show.output.on.console = FALSE)
 
