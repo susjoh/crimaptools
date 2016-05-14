@@ -1,5 +1,6 @@
 #' parse_map: Parse map from CriMAP map output
 #' @param mapfile File with output from map
+#' @export
 
 
 parse_map <- function(mapfile){

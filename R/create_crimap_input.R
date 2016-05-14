@@ -1,12 +1,31 @@
-# Prerequisites (need to be introduced for data checking)
-# pedigree must be in format ANIMAL FATHER MOTHER with those headers
-# unix tools required on system: fgrep, sed
+#' create_crimap_input: Create a CriMAP input file.
+#' @param gwaa.data GenABEL gwaa.data object containing genomic data
+#' @param familyPedigree data.frame containing columns ANIMAL, FATHER, MOTHER
+#'   and FAMILY. FAMILY defines family groups for crimap. IDs in ANIMAL can be
+#'   repeated within and between families if necessary.
+#' @param analysisID string. Used as an identifier for the chromosome. Must
+#'   begin with a numeric character as per crimap convention; for example,
+#'   analysisID = "1a" will output the file "chr1a.gen".
+#' @param snplist vector, optional. A list of ordered SNPs. UNless build is run,
+#'   SNPs will be assumed to be in this order.
+#' @param is.X logical. If true, then all heterozygotes are scored as missing in
+#'   males, except for pseudoautosomal SNPs when defined (see below)
+#' @param is.Z logical. If true, then all heterozygotes are scored as missing in
+#'   females, except for pseudoautosomal SNPs when defined (see below)
+#' @param pseudoautoSNPs Character vector of pseudoautosomal SNP IDs. Only used
+#'   if is.X or is.Z == TRUE.
+#' @param mend.errors TO DO
+#' @param outdir String, optional. Specify the path of the directory in which
+#'   the output file should be written.
+#' @param verbose Logical. FALSE will suppress messages.
+#' @param clear.existing.analysisID Logical, default is TRUE. Overwrites .gen
+#'   file and deletes crimap files that have the analysisID in the target
+#'   directory.
+#' @import GenABEL
+#' @import data.table
+#' @import plyr
+#' @export
 
-#' create_crimap_input: Subset a genabel dataset based on specified criteria.
-#' @param gwaa.data GenABEL gwaa.data to subset
-#' @param chr vector, optional: retain SNPs on particular chromosome(s)
-#' @param ped data.frame with pedigree.
-#' @param snplist vector of ordered SNP loci.
 
 # gwaa.data <- deer.abel
 # familyPedigree <- deer.famped
@@ -19,43 +38,75 @@
 # mend.errors = NULL
 # outdir = "crimap"
 # verbose = TRUE
+# clear.existing.analysisID = TRUE
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Create Crimap Files
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 create_crimap_input <- function(gwaa.data,
-                              familyPedigree,
-                              analysisID,
-                              snplist = NULL,
-                              chr = NULL,
-                              is.X = FALSE,
-                              is.Z = FALSE,
-                              pseudoautoSNPs = NULL,
-                              mend.errors = NULL,
-                              outdir = NULL,
-                              verbose = TRUE) {
+                                familyPedigree,
+                                analysisID,
+                                snplist = NULL,
+                                chr = NULL,
+                                is.X = FALSE,
+                                is.Z = FALSE,
+                                pseudoautoSNPs = NULL,
+                                mend.errors = NULL,
+                                outdir = NULL,
+                                verbose = TRUE,
+                                clear.existing.analysisID = TRUE) {
 
   #~~ Check that analysisID starts with a number
 
 
   if(!substr(analysisID, 1, 1) %in% 0:9) stop("analysisID must start with a numeric character. Please rename it and try again.")
+
   if(is.X == TRUE & is.Z == TRUE) stop("Cannot specify as both X and Z chromosome")
+
+  if(!is.null(chr) & !is.null(snplist)) stop("Please only specify only SNP list or chromosome")
+
   if(is.X == TRUE) message("Running as X chromosome: specify pseudoautosomalSNPs to retain some male PAR heterozygotes")
+
   if(is.Z == TRUE) message("Running as Z chromosome: specify pseudoautosomalSNPs to retain some female PAR heterozygotes")
+
   if(any(which(!c(familyPedigree[,1], familyPedigree[,2], familyPedigree[,3]) %in% c(idnames(gwaa.data), 0, NA)))){
+
     stop("familyPedigree must not contain any IDs that are not in the gwaa.data object.")
+
+  }
+
+  #~~ Delete existing files if specified
+
+  if(!is.null(outdir)) out.path.stem <- paste0(outdir, "/chr", analysisID)
+  if( is.null(outdir)) out.path.stem <- paste0("chr", analysisID)
+
+
+  if(clear.existing.analysisID == TRUE){
+
+    if(Sys.info()["sysname"] == "Windows") {
+
+      system("cmd", input = paste0("del ", out.path.stem, ".*"), show.output.on.console = FALSE)
+    } else {
+      system(paste0("del ", out.path.stem, ".*"), show.output.on.console = FALSE)
+
+    }
   }
 
   #~~ Check family pedigree format
 
   names(familyPedigree) <- toupper(names(familyPedigree))
-  if(!all(names(familyPedigree) %in% c("ID", "ANIMAL", "MUM", "MOM",
-                            "MOTHER", "DAM", "DAD", "POP", "FATHER", "SIRE", "FAM", "FAMILY", "IID", "FID"))) stop(simple.ped.name.rules())
+  if(!all(names(familyPedigree) %in% c("ID", "ANIMAL", "IID",
+                                       "MUM", "MOM", "MOTHER", "DAM",
+                                       "DAD", "POP","FATHER", "SIRE",
+                                       "FAM", "FAMILY", "FID"))) stop(simple.ped.name.rules())
 
   names(familyPedigree)[which(names(familyPedigree) %in% c("ID", "ANIMAL", "IID"))] <- "ANIMAL"
+
   names(familyPedigree)[which(names(familyPedigree) %in% c("MUM", "MOM", "MOTHER", "DAM"))] <- "MOTHER"
+
   names(familyPedigree)[which(names(familyPedigree) %in% c("DAD", "POP", "FATHER", "SIRE"))] <- "FATHER"
+
   names(familyPedigree)[which(names(familyPedigree) %in% c("FAM", "FID", "FAMILY"))] <- "Family"
 
   familyPedigree <- familyPedigree[,c("ANIMAL", "FATHER", "MOTHER", "Family")]
@@ -63,14 +114,20 @@ create_crimap_input <- function(gwaa.data,
   #~~ subset based on snplist
 
   if(!is.null(snplist)) gwaa.data <- gwaa.data[,snplist]
+  if(!is.null(chr))     gwaa.data <- gwaa.data[,which(chromosome(gwaa.data) == chr)]
+
 
   nfamilies <- length(unique(familyPedigree$Family))
+
   nloci <- nsnps(gwaa.data)
+
   locus.names <- snp.names(gwaa.data)
 
   #~~ define outfile and write initial information to file
 
-  if(!is.null(outdir))  outfile <- paste0(outdir, "/chr", analysisID, ".gen") else outfile <- paste0("chr", analysisID, ".gen")
+
+  outfile <- paste0(out.path.stem, ".gen")
+
 
   write.table(nfamilies, outfile, row.names = F, quote = F, col.names = F)
   write.table(nloci, outfile, row.names = F, quote = F, col.names = F, append=T)
@@ -85,6 +142,7 @@ create_crimap_input <- function(gwaa.data,
   #~~ Recode ACGT as 1234 with space delimited between alleles
 
   temp.geno <- as.character.snp.data(gtdata(gwaa.data))
+
   temp.geno <- as.matrix(temp.geno)
 
   if(verbose == TRUE) message("Recoding alleles to numeric values...")
@@ -120,16 +178,20 @@ create_crimap_input <- function(gwaa.data,
   temp.geno <- data.frame(temp.geno, stringsAsFactors=F)
 
   temp.geno$ANIMAL <- idnames(gwaa.data)
+
   temp.geno$SEX <- phdata(gwaa.data)$sex
 
-
   familyPedigree$ANIMAL <- as.character(familyPedigree$ANIMAL)
+
   temp.geno <- data.table(temp.geno, key = "ANIMAL")
+
   ped2 <- data.table(unique(familyPedigree[,1:3]), key = "ANIMAL")
 
 
   if(verbose == TRUE) message("Merging pedigree and genotype information...")
-  temp.geno <- join(ped2, temp.geno, ped2)
+
+  suppressMessages(temp.geno <- join(ped2, temp.geno))
+
   if(verbose == TRUE) message("...done.")
 
   temp.geno <- data.frame(temp.geno)
@@ -139,22 +201,25 @@ create_crimap_input <- function(gwaa.data,
   #~~ Deal with NA's
 
   temp.geno$MOTHER[which(is.na(temp.geno$MOTHER))] <- 0
+
   temp.geno$FATHER[which(is.na(temp.geno$FATHER))] <- 0
 
   for(i in 1:ncol(temp.geno)) temp.geno[which(is.na(temp.geno[,i])),i] <- "0 0"
 
-  ####################################
-
+  #~~ Format temp.geno
 
   temp.geno <- unique(temp.geno)
 
-  temp.geno <- join(familyPedigree, temp.geno)
+  suppressMessages(temp.geno <- join(familyPedigree, temp.geno))
 
   temp.geno <- temp.geno[,c("Family", "ANIMAL", "MOTHER", "FATHER", "SEX", names(temp.geno)[6:ncol(temp.geno)])]
 
+  #~~ Deal with sex chromosomes
 
   if(is.X == TRUE){
+
     xmarkers <- which(!names(temp.geno) %in% pseudoautoSNPs)
+
     xmarkers <- xmarkers[6:length(xmarkers)]
 
     heterozygotes <- c("1 2", "1 3", "1 4", "2 1", "2 3", "2 4", "3 1", "3 2", "3 4", "4 1", "4 2", "4 3")
@@ -177,7 +242,9 @@ create_crimap_input <- function(gwaa.data,
   }
 
   if(is.Z == TRUE){
+
     xmarkers <- which(!names(temp.geno) %in% pseudoautoSNPs)
+
     xmarkers <- xmarkers[6:length(xmarkers)]
 
     heterozygotes <- c("1 2", "1 3", "1 4", "2 1", "2 3", "2 4", "3 1", "3 2", "3 4", "4 1", "4 2", "4 3")
@@ -199,6 +266,8 @@ create_crimap_input <- function(gwaa.data,
 
   }
 
+  if(verbose == TRUE) message(paste0("Parsing and writing to ", outfile, "..."))
+
 
   #~~ deal with mendelian errors
 
@@ -216,6 +285,7 @@ create_crimap_input <- function(gwaa.data,
   #~~ Create the family and genotype part of the file.
 
   test <- data.frame(FamSize = tapply(familyPedigree$Family, familyPedigree$Family, length))
+
   test$Family <- row.names(test)
 
   familyPedigree <- arrange(familyPedigree, Family)
@@ -238,12 +308,16 @@ create_crimap_input <- function(gwaa.data,
 
   }
 
-
+  #~~ remove white space
 
   final.frame2 <- apply(final.frame, 1, function (x) paste(x, collapse = " "))
   final.frame2 <- gsub("\\s+$", "", final.frame2)
 
+  #~~ Write to file
+
   write.table(final.frame2, outfile, row.names = F, quote = F, col.names = F, append=T)
+
+  if(verbose == TRUE) message("...done")
 
 }
 

@@ -1,5 +1,6 @@
 #' parse_flips: Parse output from CriMAP flips
 #' @param flipsfile File with output from flips.
+#' @export
 
 
 parse_flips <- function(flipsfile){

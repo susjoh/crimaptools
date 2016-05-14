@@ -1,5 +1,7 @@
 #' parse_crossovers: Parse crossover information from CriMAP chrompic output
 #' @param chrompicfile File with output from chrompic
+#' @export
+
 
 
 parse_crossovers <- function(chrompicfile){

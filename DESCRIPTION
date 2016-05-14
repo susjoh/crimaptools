@@ -3,10 +3,12 @@ Type: Package
 Title: Tools for preparing files and parsing output for the programme Cri-MAP
 Version: 0.1
 Date: 2016-05-11
-Author: Susan Johnston
-Maintainer: <Susan.Johnston@ed.ac.uk>
+Authors@R: person("Susan", "Johnston", email = "Susan.Johnston@ed.ac.uk",
+                  role = c("aut", "cre"))
 Description: Tools for preparing files and parsing output for the programme Cri-
-    MAP
+    MAP.
+Depends: R (>= 3.2.0)
 License: MIT
 LazyData: TRUE
 RoxygenNote: 5.0.1
+Imports: GenABEL, data.table, plyr

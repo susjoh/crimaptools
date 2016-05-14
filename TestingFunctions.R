@@ -1,8 +1,8 @@
 
-
+devtools::document()
 data(deer)
 
-createCrimapFile(deer.abel, deer.famped, analysisID = "1a", chr = 1)
+create_crimap_input (deer.abel, deer.famped, analysisID = "1a", snplist = snpnames(deer.abel)[1:3], outdir = "crimap")
 
 
 library(crimaptools)

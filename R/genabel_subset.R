@@ -3,6 +3,8 @@
 #' @param chr vector, optional: retain SNPs on particular chromosome(s)
 #' @param ped data.frame with pedigree.
 #' @param snplist vector of ordered SNP loci.
+#' @import GenABEL
+#' @export
 
 
 genabel_subset <- function(gwaa.data, chr = NULL, ped = NULL, snplist = NULL){

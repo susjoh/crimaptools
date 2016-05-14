@@ -7,6 +7,7 @@
 #' they are named sensibly. Run simple.ped.name.rules() for an example.
 #' @param pedigree.type Defaults to "simple", can also accept "plink" which
 #' is equivalent for for first 5 to 6 columns of a PLINK .ped file.
+#' @export
 
 
 format_pedigree <- function(ped, pedigree.type = "simple"){   # "plink"

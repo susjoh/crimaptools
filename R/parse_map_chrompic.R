@@ -1,5 +1,6 @@
 #' parse_map_chrompic: Parse map from CriMAP chrompic output
 #' @param chrompicfile File with output from chrompic
+#' @export
 
 
 parse_map_chrompic <- function(chrompicfile){
