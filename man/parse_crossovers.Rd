@@ -4,12 +4,18 @@
 \alias{parse_crossovers}
 \title{parse_crossovers: Parse crossover information from CriMAP chrompic output}
 \usage{
-parse_crossovers(chrompicfile, remove.zero.inf.loci = TRUE)
+parse_crossovers(chrompicfile, familyPedigree, remove.zero.inf.loci = TRUE)
 }
 \arguments{
 \item{chrompicfile}{File with output from chrompic}
 
-\item{remove.zero.inf.loci}{Logical, default = TRUE. Remove IDs with no informative loci.}
+\item{familyPedigree}{data.frame containing columns ANIMAL, FATHER, MOTHER
+and FAMILY. FAMILY defines family groups for crimap. IDs in ANIMAL can be
+repeated within and between families if necessary. Should be that used in
+create_crimap_input.}
+
+\item{remove.zero.inf.loci}{Logical, default = TRUE. Remove IDs with no
+informative loci.}
 }
 \description{
 parse_crossovers: Parse crossover information from CriMAP chrompic output
