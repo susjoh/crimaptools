@@ -14,7 +14,7 @@
 #'   females, except for pseudoautosomal SNPs when defined (see below)
 #' @param pseudoautoSNPs Character vector of pseudoautosomal SNP IDs. Only used
 #'   if is.X or is.Z == TRUE.
-#' @param mend.errors TO DO
+#' @param use.mnd logical, default = FALSE. Masks parent offspring genotype mismatches based on output from parse_mend_err
 #' @param outdir String, optional. Specify the path of the directory in which
 #'   the output file should be written.
 #' @param verbose Logical. FALSE will suppress messages.
@@ -25,20 +25,22 @@
 #' @import data.table
 #' @import plyr
 #' @export
-
-
+#
+#
 # gwaa.data <- deer.abel
 # familyPedigree <- deer.famped
 # mend.errors <- NULL
 # analysisID <- "1a"
-# snplist <- snpnames(gwaa.data[,chromosome(gwaa.data) ==3])
+# snplist <- snpnames(gwaa.data[,chromosome(gwaa.data) ==1])
+# chr = NULL
 # is.X = FALSE
 # is.Z = FALSE
 # pseudoautoSNPs = NULL
-# mend.errors = NULL
+# use.mnd <- TRUE
 # outdir = "crimap"
 # verbose = TRUE
 # clear.existing.analysisID = TRUE
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Create Crimap Files
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,7 +54,7 @@ create_crimap_input <- function(gwaa.data,
                                 is.X = FALSE,
                                 is.Z = FALSE,
                                 pseudoautoSNPs = NULL,
-                                mend.errors = NULL,
+                                use.mnd = FALSE,
                                 outdir = NULL,
                                 verbose = TRUE,
                                 clear.existing.analysisID = TRUE) {
@@ -76,6 +78,11 @@ create_crimap_input <- function(gwaa.data,
 
   }
 
+  if(use.mnd == TRUE & !paste0("chr", analysisID, ".mnd") %in% dir(outdir)){
+    stop(paste0("use.mnd == TRUE, but there is no file named chr",
+                analysisID, ".mnd. Change to FALSE and/or run parse_mend_err()."))
+  }
+
   #~~ Delete existing files if specified
 
   if(!is.null(outdir)) out.path.stem <- paste0(outdir, "/chr", analysisID)
@@ -84,15 +91,42 @@ create_crimap_input <- function(gwaa.data,
 
   if(clear.existing.analysisID == TRUE){
 
+    del.vec <- grep(paste0("chr", analysisID, "."), dir(outdir), value = T)
+
+    if(use.mnd == TRUE & paste0("chr", analysisID, ".mnd") %in% del.vec){
+
+        del.vec <- del.vec[-which(del.vec == paste0("chr", analysisID, ".mnd"))]
+
+        }
+
+
     if(Sys.info()["sysname"] == "Windows") {
 
-      out.path.stem <- gsub("/", "\\\\", out.path.stem)
-      system("cmd", input = paste0("del ", out.path.stem, ".*"), show.output.on.console = T)
+      if(length(del.vec) > 0){
+
+        if(!is.null(outdir)) del.vec <- paste0(outdir, "\\", del.vec)
+
+        for(i in del.vec){
+
+          system("cmd", input = paste0("del ", i), show.output.on.console = F)
+        }
+
+      }
+
     } else {
-      system(paste0("del ", out.path.stem, ".*"), show.output.on.console = FALSE)
+
+      if(!is.null(outdir)) del.vec <- paste0(outdir, "/", del.vec)
+
+
+      for(i in del.vec){
+
+        system(paste0("rm ", i), show.output.on.console = F)
+      }
 
     }
+
   }
+
 
   #~~ Check family pedigree format
 
@@ -128,7 +162,6 @@ create_crimap_input <- function(gwaa.data,
 
 
   outfile <- paste0(out.path.stem, ".gen")
-
 
   write.table(nfamilies, outfile, row.names = F, quote = F, col.names = F)
   write.table(nloci, outfile, row.names = F, quote = F, col.names = F, append=T)
@@ -270,16 +303,25 @@ create_crimap_input <- function(gwaa.data,
   if(verbose == TRUE) message(paste0("Parsing and writing to ", outfile, "..."))
 
 
-  #~~ deal with mendelian errors
+  #~~ deal with mendelian errors if specified
 
-  #   if(!is.null(menderrtab)){
-  #     menderrtab <- subset(menderrtab, Chr == chr)
-  #     if(nrow(menderrtab) > 0){
-  #       for(i in 1:nrow(menderrtab)){
-  #         temp.geno[which(temp.geno$ANIMAL == menderrtab$ANIMAL[i]), 6 + as.numeric(menderrtab$Locus[i])] <- "0 0"
-  #       }
-  #     }
-  #   }
+  if(use.mnd == TRUE){
+
+    menderrtab <- read.table(paste0(out.path.stem, ".mnd"), header = T, stringsAsFactors = F)
+
+    if(nrow(menderrtab) > 0){
+
+
+      for(i in 1:nrow(menderrtab)){
+
+        temp.geno[which(temp.geno$ANIMAL == menderrtab$ANIMAL[i]),
+                  which(names(temp.geno) == menderrtab$SNP.Name[i])] <- "0 0"
+
+      }
+
+    }
+
+  }
 
   temp.geno <- as.matrix(temp.geno)
 

@@ -5,23 +5,19 @@
 #' the crimap file. This function will delete all files associated with the
 #' analysis suffix, except the .gen file.
 #'
-#' @param crimap.path path to run crimap. This should be given relative to the same directory
-#'   as...
-#' @param crimap.file path for crimap file. Should be in a subdirectory of the
-#'   working directory.
+#' @param crimap.path path to run crimap. This should be given relative to the
+#'   same directory as...
+#' @param genfile path for crimap .gen file.
 #' @export
 
 
-# crimap.path <- "crimap2504.exe"
-# crimap.file <- "crimap/chr1a.gen"
-
-run_crimap_prepare <- function(crimap.path, crimap.file){
+run_crimap_prepare <- function(crimap.path, genfile){
 
   #~~ parse crimap.file if in another directory
 
-  if(length(grep("..", crimap.file, fixed = T)) > 0) stop("This function will only work if the crimap file is in a sub-directory of the working directory")
+  # if(length(grep("..", crimap.file, fixed = T)) > 0) stop("This function will only work if the crimap file is in a sub-directory of the working directory")
 
-  crimap.file <- gsub("\\\\", "/", crimap.file)
+  crimap.file <- gsub("\\\\", "/", genfile)
 
   crimap.file <- strsplit(crimap.file, split = "/")[[1]]
 
@@ -43,20 +39,20 @@ run_crimap_prepare <- function(crimap.path, crimap.file){
 
       for(i in del.vec){
 
-        system("cmd", input = paste0("del ", i))
+        system("cmd", input = paste0("del ", i), show.output.on.console = F)
       }
 
     }
 
-    system("cmd", input = paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"))
+    system("cmd", input = paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"), show.output.on.console = F)
 
   } else {
 
     for(i in del.vec){
 
-      system(paste0("rm ", i))
+      system(paste0("rm ", i), show.output.on.console = F)
     }
-    system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"))
+    system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"), show.output.on.console = F)
 
   }
 

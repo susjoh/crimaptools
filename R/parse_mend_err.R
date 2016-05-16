@@ -13,7 +13,7 @@
 # save.mendfile <- TRUE
 # familyPedigree <- deer.famped
 
-parse_mender_err <- function(prefile, genfile, save.mendfile = TRUE, familyPedigree){
+parse_mend_err <- function(prefile, genfile, save.mendfile = TRUE, familyPedigree){
 
   #~~ read in Mendelian errors
 
@@ -59,11 +59,11 @@ parse_mender_err <- function(prefile, genfile, save.mendfile = TRUE, familyPedig
     names(snplist) <- "SNP.Name"
     snplist$Locus <- 0:(nloci - 1)
 
-    menderr <- join(menderr, snplist)
+    suppressMessages(menderr <- join(menderr, snplist))
 
     #~~ Merge with pedigree information
 
-    menderr <- join(menderr, familyPedigree)
+    suppressMessages(menderr <- join(menderr, familyPedigree))
 
     #~~ Find the parental mismatch
 

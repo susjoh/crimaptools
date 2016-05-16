@@ -73,9 +73,9 @@ if(length(x.0) == 0){
   names(parent.mismatch) <- c("ANIMAL", "Mat.Mismatches", "Pat.Mismatches", "Count")
 
   parent.mismatch <- rbind(cbind(parent.mismatch[which(parent.mismatch$Mat.Mismatches == "yes"), c("ANIMAL", "Count")],
-                      Parent = "MOTHER"),
-                cbind(parent.mismatch[which(parent.mismatch$Pat.Mismatches == "yes"), c("ANIMAL", "Count")],
-                      Parent = "FATHER"))
+                                 Parent = "MOTHER"),
+                           cbind(parent.mismatch[which(parent.mismatch$Pat.Mismatches == "yes"), c("ANIMAL", "Count")],
+                                 Parent = "FATHER"))
 
 
 
@@ -85,27 +85,26 @@ if(length(x.0) == 0){
   parent.dup.tab <- data.frame(table(parent.mismatch$Parent.ID.Code))
   parent.dup.tab <- subset(parent.dup.tab, Freq > 1)
 
-  for(i in 1:nrow(parent.dup.tab)){
-    count.temp <- parent.mismatch$Count[which(parent.mismatch$Parent.ID.Code == parent.dup.tab$Var1[i])]
+  if(nrow(parent.dup.tab) > 0){
 
-    if(count.temp[1] != count.temp[2]){
-      parent.mismatch <- parent.mismatch[-which(parent.mismatch$Parent.ID.Code == parent.dup.tab$Var1[i] &
-                                                  parent.mismatch$Count == min(count.temp)),]
-    }
+    for(i in 1:nrow(parent.dup.tab)){
+      count.temp <- parent.mismatch$Count[which(parent.mismatch$Parent.ID.Code == parent.dup.tab$Var1[i])]
 
-    if(count.temp[1] == count.temp[2]) {
+      if(count.temp[1] != count.temp[2]){
+        parent.mismatch <- parent.mismatch[-which(parent.mismatch$Parent.ID.Code == parent.dup.tab$Var1[i] &
+                                                    parent.mismatch$Count == min(count.temp)),]
+      }
 
-      parent.mismatch <- parent.mismatch[-which(parent.mismatch$Parent.ID.Code == parent.dup.tab$Var1[i] &
-                                                  parent.mismatch$Count == min(count.temp))[1],]
+      if(count.temp[1] == count.temp[2]) {
+
+        parent.mismatch <- parent.mismatch[-which(parent.mismatch$Parent.ID.Code == parent.dup.tab$Var1[i] &
+                                                    parent.mismatch$Count == min(count.temp))[1],]
+      }
     }
   }
 
 
-  exclusion.threshold <- nsnps(abeldata) * 0.001
-
-  ggplot(parent.mismatch[which(parent.mismatch$Count < exclusion.threshold),], aes(Count)) +
-    geom_histogram(binwidth = 1) +
-    facet_wrap(~Parent)
+  exclusion.threshold <- nloci * exclusion.threshold
 
   remove.ids <- parent.mismatch[which(parent.mismatch$Count > exclusion.threshold),]
 
