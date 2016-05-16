@@ -21,18 +21,13 @@ parse_mend_err("crimap/chr3a.pre", "crimap/chr3a.gen", familyPedigree = deer.fam
 
 run_crimap_chrompic("crimap2504.exe", "crimap/chr3a.gen")
 
+run_crimap_map("crimap2504.exe", "crimap/chr3a.gen")
 
-library(crimaptools)
+maptab <- parse_map_chrompic("crimap/chr3a.cmp")
+head(maptab)
 
-nids(deer.abel)
-nsnps(deer.abel)
-table(chromosome(deer.abel))
+maptab2 <- parse_map("crimap/chr3a.map")
+head(maptab2)
 
-sub1 <- genabelSubset(gwaa.data = deer.abel, ped = deer.ped, chr = 1)
-nids(sub1)
-nsnps(sub1)
-table(chromosome(sub1))
-
-chr.vec <- snp.names(sub1)[1:3]
-chr.vec
-sub1 <- genabelSubset(gwaa.data = deer.abel, ped = deer.ped, snplist = chr.vec)
+xovertab <- parse_crossovers("crimap/chr3a.cmp")
+head(xovertab)
