@@ -13,9 +13,7 @@ same directory as...}
 \item{genfile}{path for crimap .gen file.}
 }
 \description{
-NB. This function will only work if the crimap file is in a sub-directory of
-the working directory, and that the crimap.path is in the same directory as
-the crimap file. This function will delete all files associated with the
+NB. This function will delete all files associated with the
 analysis suffix, except the .gen file.
 }
 

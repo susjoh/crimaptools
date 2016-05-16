@@ -4,10 +4,12 @@
 \alias{parse_crossovers}
 \title{parse_crossovers: Parse crossover information from CriMAP chrompic output}
 \usage{
-parse_crossovers(chrompicfile)
+parse_crossovers(chrompicfile, remove.zero.inf.loci = TRUE)
 }
 \arguments{
 \item{chrompicfile}{File with output from chrompic}
+
+\item{remove.zero.inf.loci}{Logical, default = TRUE. Remove IDs with no informative loci.}
 }
 \description{
 parse_crossovers: Parse crossover information from CriMAP chrompic output
