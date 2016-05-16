@@ -23,7 +23,7 @@ parse_map_chrompic <- function(chrompicfile){
 
   map$Order <- NA
   map$SNP.Name <- NA
-  map$Position <- NA
+  map$cMPosition <- NA
   map$r <- NA
   map$cMdiff <- NA
 
@@ -33,7 +33,7 @@ parse_map_chrompic <- function(chrompicfile){
 
     map$Order[i] <- x[1]
     map$SNP.Name[i] <- x[2]
-    map$Position[i] <- x[3]
+    map$cMPosition[i] <- x[3]
     rm(x)
 
     x <- strsplit(map$map2[i], split = " ")[[1]]
@@ -46,6 +46,21 @@ parse_map_chrompic <- function(chrompicfile){
   }
 
   map <- subset(map, select = -c(map, map2))
+
+  analysisID.val <- gsub("\\\\", "/", chrompicfile)
+
+  analysisID.val <- strsplit(analysisID.val, split = "/")[[1]]
+  analysisID.val <- analysisID.val[length(analysisID.val)]
+  analysisID.val <- gsub("chr", "", analysisID.val)
+  analysisID.val <- gsub(".cmp", "", analysisID.val, fixed = T)
+
+  map$analysisID <- analysisID.val
+
+  convert.cols <- which(names(map) %in%
+                          c("Order", "cMPosition", "r", "cMdiff"))
+
+  map[,convert.cols] <- sapply(map[,convert.cols], as.numeric)
+
 
   map
 

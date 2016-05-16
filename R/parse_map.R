@@ -59,5 +59,20 @@ parse_map <- function(mapfile){
 
   map <- subset(map, select = -c(map, map2))
 
+  analysisID.val <- gsub("\\\\", "/", mapfile)
+
+  analysisID.val <- strsplit(analysisID.val, split = "/")[[1]]
+  analysisID.val <- analysisID.val[length(analysisID.val)]
+  analysisID.val <- gsub("chr", "", analysisID.val)
+  analysisID.val <- gsub(".map", "", analysisID.val, fixed = T)
+
+  map$analysisID <- analysisID.val
+
+  convert.cols <- which(names(map) %in%
+                          c("Order", "cMPosition.Female", "cMPosition.Male",
+                            "Female.r", "cMdiff.Female", "Male.r", "cMdiff.Male"))
+
+  map[,convert.cols] <- sapply(map[,convert.cols], as.numeric)
+
   map
 }

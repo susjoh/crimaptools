@@ -130,21 +130,7 @@ create_crimap_input <- function(gwaa.data,
 
   #~~ Check family pedigree format
 
-  names(familyPedigree) <- toupper(names(familyPedigree))
-  if(!all(names(familyPedigree) %in% c("ID", "ANIMAL", "IID",
-                                       "MUM", "MOM", "MOTHER", "DAM",
-                                       "DAD", "POP","FATHER", "SIRE",
-                                       "FAM", "FAMILY", "FID"))) stop(simple.ped.name.rules())
-
-  names(familyPedigree)[which(names(familyPedigree) %in% c("ID", "ANIMAL", "IID"))] <- "ANIMAL"
-
-  names(familyPedigree)[which(names(familyPedigree) %in% c("MUM", "MOM", "MOTHER", "DAM"))] <- "MOTHER"
-
-  names(familyPedigree)[which(names(familyPedigree) %in% c("DAD", "POP", "FATHER", "SIRE"))] <- "FATHER"
-
-  names(familyPedigree)[which(names(familyPedigree) %in% c("FAM", "FID", "FAMILY"))] <- "Family"
-
-  familyPedigree <- familyPedigree[,c("ANIMAL", "FATHER", "MOTHER", "Family")]
+  familyPedigree <- format_family_pedigree(familyPedigree)
 
   #~~ subset based on snplist
 
