@@ -1,9 +1,4 @@
-#' run_crimap_chrompic: Run prepare in crimap
-#'
-#' NB. This function will only work if the crimap file is in a sub-directory of
-#' the working directory, and that the crimap.path is in the same directory as
-#' the crimap file. This function will delete all files associated with the
-#' analysis suffix, except the .gen file.
+#' run_crimap_chrompic: Run chrompic in crimap
 #'
 #' @param crimap.path path to run crimap. This should be given relative to the
 #'   same directory as...

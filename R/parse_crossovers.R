@@ -1,15 +1,16 @@
 #' parse_crossovers: Parse crossover information from CriMAP chrompic output
 #' @param chrompicfile File with output from chrompic
+#' @param remove.zero.inf.loci Logical, default = TRUE. Remove IDs with no informative loci.
 #' @export
 
 
 
-parse_crossovers <- function(chrompicfile){
+parse_crossovers <- function(chrompicfile, remove.zero.inf.loci = TRUE){
   #~~ read lines from the chrompic file
 
   x <- readLines(chrompicfile)
 
-  nmarkers <- nrow(MapFromChrompic(chrompicfile))
+  nmarkers <- nrow(parse_map_chrompic(chrompicfile))
 
   x <- x[1:grep("Sex_averaged", x)]
 
@@ -92,6 +93,8 @@ parse_crossovers <- function(chrompicfile){
   head(recombframe)
 
   recombframe$RecombCount <- as.numeric(recombframe$RecombCount)
+
+  if(remove.zero.inf.loci == TRUE) recombframe <- subset(recombframe, No.Inf.Loci != 0)
 
   recombframe
 
