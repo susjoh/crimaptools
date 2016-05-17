@@ -100,6 +100,7 @@ create_crimap_input <- function(gwaa.data,
     if(use.mnd == TRUE & paste0("chr", analysisID, ".mnd") %in% del.vec){
 
         del.vec <- del.vec[-which(del.vec == paste0("chr", analysisID, ".mnd"))]
+        del.vec <- del.vec[-which(del.vec == paste0("chr", analysisID, ".mndverbose"))]
 
         }
 
