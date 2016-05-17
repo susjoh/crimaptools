@@ -30,6 +30,9 @@ run_crimap_prepare <- function(crimap.path, genfile){
 
   del.vec <- grep(paste0("chr", crimap.stem, "."), dir(), value = T)
   del.vec <- del.vec[-which(del.vec == paste0("chr", crimap.stem, ".gen"))]
+  del.vec <- del.vec[-which(del.vec == paste0("chr", crimap.stem, ".mnd"))]
+  del.vec <- del.vec[-which(del.vec == paste0("chr", crimap.stem, ".mndverbose"))]
+
 
   if(Sys.info()["sysname"] == "Windows") {
 
