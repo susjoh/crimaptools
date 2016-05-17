@@ -83,6 +83,10 @@ create_crimap_input <- function(gwaa.data,
                 analysisID, ".mnd. Change to FALSE and/or run parse_mend_err()."))
   }
 
+  dir.create(outdir, showWarnings = FALSE)
+
+
+
   #~~ Delete existing files if specified
 
   if(!is.null(outdir)) out.path.stem <- paste0(outdir, "/chr", analysisID)

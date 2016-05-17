@@ -123,6 +123,9 @@ parse_crossovers <- function(chrompicfile, familyPedigree, remove.zero.inf.loci 
 
   recombframe$analysisID <- analysisID.val
 
+  recombframe$UniqueID <- paste(recombframe$analysisID, recombframe$Family, recombframe$RRID, recombframe$parent, sep = "_")
+
+
   recombframe
 
 }
