@@ -22,13 +22,13 @@ run_crimap_chrompic <- function(crimap.path, genfile){
 
   if(Sys.info()["sysname"] == "Windows") {
 
-    system("cmd", input = paste0(crimap.path, " ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = F)
+    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = T)
     system("cmd", input = "del *.cg", show.output.on.console = F)
 
 
   } else {
 
-    system(paste0("\"", crimap.path, "\" ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = F)
+    system(paste0(crimap.path, " ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = F)
     system("rm *.cg", show.output.on.console = F)
 
   }
