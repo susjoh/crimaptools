@@ -89,6 +89,9 @@ parse_mend_err <- function(prefile, genfile, save.mendfile = TRUE, familyPedigre
                   gsub(".gen", ".mnd", genfile, fixed = T),
                   row.names = F, sep = "\t", quote = F)
 
+      write.table(menderr,
+                  gsub(".gen", ".mndverbose", genfile, fixed = T),
+                  row.names = F, sep = "\t", quote = F)
     }
 
   }
