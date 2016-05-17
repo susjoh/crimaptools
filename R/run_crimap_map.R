@@ -29,7 +29,7 @@ run_crimap_map <- function(crimap.path, genfile){
 
   if(Sys.info()["sysname"] == "Windows") {
 
-    system("cmd", input = paste0(crimap.path, " ", crimap.stem, " build > chr", crimap.stem, ".map"), show.output.on.console = F)
+    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " build > chr", crimap.stem, ".map"), show.output.on.console = F)
 
   } else {
 

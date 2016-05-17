@@ -25,7 +25,7 @@ run_crimap_flips <- function(crimap.path, genfile, flips = 2){
 
     eval(
       parse(
-        text = paste0("system(\"cmd\", input = \"", crimap.path, " ", crimap.stem, " flips", flips, " > chr", crimap.stem, ".fl", flips, "\", show.output.on.console = F)")
+        text = paste0("system(\"cmd\", input = \"", "\"", crimap.path, "\" ", crimap.stem, " flips", flips, " > chr", crimap.stem, ".fl", flips, "\", show.output.on.console = F)")
       )
     )
 

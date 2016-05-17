@@ -42,7 +42,7 @@ run_crimap_prepare <- function(crimap.path, genfile){
 
     }
 
-    system("cmd", input = paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"), show.output.on.console = F)
+    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"), show.output.on.console = F)
 
   } else {
 

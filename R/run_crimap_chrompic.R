@@ -28,7 +28,7 @@ run_crimap_chrompic <- function(crimap.path, genfile){
 
   } else {
 
-    system(paste0(crimap.path, " ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = F)
+    system(paste0("\"", crimap.path, "\" ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = F)
     system("rm *.cg", show.output.on.console = F)
 
   }
