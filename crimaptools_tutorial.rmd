@@ -1,0 +1,162 @@
+---
+title: 'crimaptools: a tutorial'
+author: "Susan Johnston"
+date: "17 May 2016"
+output: pdf_document
+---
+
+This `crimaptools` package creates input files, runs CRI-MAP and parses output files for analyses of linkage mapping and recombination rate estimation in CRI-MAP v2.504. This packages is still in progress in terms of optimisation (particularly dealing with unusual CriMAP syntax), but should run if instructions are followed carefully. To download CRI-MAP, which is currently tirelessly maintained by Jill Maddox, go [here](http://www.animalgenome.org/tools/share/crimap/). For more information on how to use it from the command line, check out Paris Veltsos's tutorial [here](http://www.parisveltsos.com/research/crimap/index.html). 
+
+The package can be installed using devtools:
+
+```{r, eval=F}
+library(devtools)
+install_github("susjoh/crimaptools")
+
+```
+
+### 1. Example dataset.
+
+`crimaptools` requires two inputs to create, run and parse files:
+* A GenABEL gwaa.data object containing genotype information for IDs
+* A pedigree object that specifies the individual families used in Crimap, with columns for the ANIMAL, FATHER, MOTHER and FAMILY. An example dataset from Red deer is included, and can be called using `data(deer)`
+
+```{r}
+
+data(deer)
+
+ls()
+
+deer.famped
+
+
+```
+
+### 2. Creating a CRI-MAP input file.
+
+This is done using the function create_crimap_input. This requires the `deer.abel` and `deer.famped` objects, but also requires additional inputs such as `analysisID`, used as a flag for running CRI-MAP. An ordered list of SNP loci (`snplist = `) *or* a chromosome number `chr = ` must be specified. It is also possible to specify the directory to which the output should be written, and `clear.existing.analysisID` will get rid of any previous builds carried out with the same analysisID. Let's run the analysis for chromosome 3, and give it the ID `3a`.
+
+```{r}
+library(crimaptools)
+
+create_crimap_input(gwaa.data = deer.abel,
+                    familyPedigree = deer.famped,
+                    analysisID = "3a",
+                    chr = 3,
+                    outdir = "crimap",
+                    clear.existing.analysisID = TRUE)
+
+```
+
+In the directory `crimap`, an input file `chr3a.gen` will have been created.
+
+### 3. Run *prepare* and extract and deal with mendelian errors.
+
+The .gen file must now be run through *prepare* to produce the field used for linkage mapping and crossover estimation. This can be done using the function `run_crimap_prepare`. At present this inefficiently has to define the path to the CRI-MAP exectuable (in future versions it will be bundled with the library). At the moment, the exectuable path is specified relative to the .gen file - for example, below, the CRI-MAP executable is in the same directory as the .gen file: 
+
+```{r}
+
+run_crimap_prepare("crimap2504.exe", "crimap/chr3a.gen")
+dir("crimap")
+
+```
+
+The function has produced the .pre, .loc, .par and .dat files. The .pre file will contain information on mendelian errors between parents and offspring, which can be extracted using the `parse_mend_err` function. This creates a further file with the extension ".mnd", which has a column for each ID and the problematic locus:
+
+```{r}
+parse_mend_err("crimap/chr3a.pre", "crimap/chr3a.gen", familyPedigree = deer.famped)
+
+read.table("crimap/chr3a.mnd", header = T)
+
+```
+
+Information from this file can be used to mask mendelian errors in the .gen file, by rerunning the `create_crimap_input` with `use.mnd = TRUE`:
+
+```{r}
+create_crimap_input (deer.abel, deer.famped, analysisID = "3a",
+                     chr = 3, outdir = "crimap", clear.existing.analysisID = TRUE,
+                     use.mnd = TRUE)
+
+run_crimap_prepare(crimap.path = "crimap2504.exe", genfile = "crimap/chr3a.gen")
+
+parse_mend_err(prefile = "crimap/chr3a.pre", genfile = "crimap/chr3a.gen", familyPedigree = deer.famped)
+
+```
+### 4. Build a linkage map.
+
+Now the dataset is ready for linkage mapping and characterisation of crossovers. This assumes the order of the deer.abel dataset when chromosome is specified; if snplist was specified in `create_crimap_input` then it assumes the order of the snplist itself. The linkage map can be obtained by running `run_crimap_map`, which may be slow for large numbers of markers/families, and then parsed with `parse_map`, which provides sex specific maps:
+
+```{r}
+
+run_crimap_map(crimap.path = "crimap2504.exe", genfile = "crimap/chr3a.gen")
+dir("crimap")
+
+deer.map <- parse_map(mapfile = "crimap/chr3a.map")
+head(deer.map)
+
+```
+
+### 5. Characterising recombination events.
+
+The recombination events can be obtained by running `run_crimap_chrompic`, which again may be slow for larger numbers of markers/families. A sex averaged linkage map can be parsed with `parse_map_chrompic` and crossovers can be extracted with `parse_crossovers`, which also requires the family pedigree:
+
+```{r}
+run_crimap_chrompic(crimap.path = "crimap2504.exe", genfile = "crimap/chr3a.gen")
+
+deer.cmpmap <- parse_map_chrompic(chrompicfile = "crimap/chr3a.cmp")
+head(deer.cmpmap)
+
+
+deer.xovers <- parse_crossovers(chrompicfile = "crimap/chr3a.cmp", familyPedigree = deer.famped)
+deer.xovers[1:2,]
+
+```
+
+Column `data` is the inheritance pattern from grandparents, with each character representing an ordered SNP. 0 is grandmaternal, 1 is grandpaternal. `RRID` is the parent in which the meiosis took place.
+
+### 6. Investigating doubles crossovers.
+
+Genotyping and/or phasing errors can lead to erroneous calls of double crossovers. These can be investigated by running `check_double_crossovers` on the parsed crossovers: 
+
+```{r}
+
+deer.doubles <- check_double_crossovers(parsed.xovers = deer.xovers)
+head(deer.doubles)
+
+```
+
+This takes the phasing information and returns information on the Phase fragments per chromosome (i.e. runs from a single grandparent. Phase: 0 = grandmaternal, 1 = grandpaternal; StartPos and StopPos are the first and last informative positions of the fragment, StartSpan and StopSpan are the closest informative SNPs on either side of the fragment (if first or last, then is first or last SNP); InfCount is the number of informative SNPs in the fragment; Segment is the order of the fragment, numbered 1:N; Type is whether the fragment was the first, last or occured in the middle of the chromosome; RRID is the individual in which the meiosis occurred.
+
+Physical map infomation for the markers can also be added by specifying map positions in a data frame with headers SNP.Name, Position, Order and analysisID:
+
+
+```{r}
+library(GenABEL)
+
+physmap <- data.frame(SNP.Name = snpnames(deer.abel)[chromosome(deer.abel) == 3],
+                      Position = map(deer.abel)[chromosome(deer.abel) == 3],
+                      Order = 1:length(which(chromosome(deer.abel) == 3)),
+                      analysisID = "3a")
+
+
+deer.doubles <- check_double_crossovers(parsed.xovers = deer.xovers, physical.map = physmap)
+head(deer.doubles)
+
+
+```
+This outputs additional columns with the genome positions for Pos and Span values, and also PosLength and SpanLength, which is the difference between the start and stop positions.
+
+The user then has some choice of which lines may be erroneous. For example, singletons may be removed. 
+
+```{r}
+
+deer.remove <- subset(deer.doubles, Singleton == "yes")
+
+deer.xovers.clean <- revise_double_crossovers(parsed.xovers = deer.xovers, removesections = deer.remove)
+
+deer.xovers.clean
+
+```
+
+
+
