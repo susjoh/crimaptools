@@ -5,21 +5,23 @@ date: "17 May 2016"
 output: pdf_document
 ---
 
-This `crimaptools` package creates input files, runs CRI-MAP and parses output files for analyses of linkage mapping and recombination rate estimation in CRI-MAP v2.504. This packages is still in progress in terms of optimisation (particularly dealing with unusual CriMAP syntax), but should run if instructions are followed carefully. To download CRI-MAP, which is currently tirelessly maintained by Jill Maddox, go [here](http://www.animalgenome.org/tools/share/crimap/). For more information on how to use it from the command line, check out Paris Veltsos's tutorial [here](http://www.parisveltsos.com/research/crimap/index.html). 
+This `crimaptools` package creates input files, runs CRI-MAP and parses output files for analyses of linkage mapping and recombination rate estimation in CRI-MAP v2.504. This packages is still in progress in terms of optimisation (particularly dealing with unusual CRI-MAP syntax), but should run if instructions are followed carefully. To download CRI-MAP, which is currently tirelessly maintained by Jill Maddox, go [here](http://www.animalgenome.org/tools/share/crimap/). For more information on how to use it from the command line, check out Paris Veltsos's tutorial [here](http://www.parisveltsos.com/research/crimap/index.html). 
 
 The package can be installed using devtools:
 
 ```{r, eval=F}
 library(devtools)
 install_github("susjoh/crimaptools")
-
 ```
 
 ### 1. Example dataset.
 
 `crimaptools` requires two inputs to create, run and parse files:
-* A GenABEL gwaa.data object containing genotype information for IDs
-* A pedigree object that specifies the individual families used in Crimap, with columns for the ANIMAL, FATHER, MOTHER and FAMILY. An example dataset from Red deer is included, and can be called using `data(deer)`
+
+1. A GenABEL `gwaa.data` object containing genotype information for IDs
+2. A pedigree object that specifies the individual families used in CRI-MAP, with columns for the ANIMAL, FATHER, MOTHER and FAMILY.
+
+An example dataset from Red deer is included, and can be called using `data(deer)`
 
 ```{r}
 
@@ -34,7 +36,7 @@ deer.famped
 
 ### 2. Creating a CRI-MAP input file.
 
-This is done using the function create_crimap_input. This requires the `deer.abel` and `deer.famped` objects, but also requires additional inputs such as `analysisID`, used as a flag for running CRI-MAP. An ordered list of SNP loci (`snplist = `) *or* a chromosome number `chr = ` must be specified. It is also possible to specify the directory to which the output should be written, and `clear.existing.analysisID` will get rid of any previous builds carried out with the same analysisID. Let's run the analysis for chromosome 3, and give it the ID `3a`.
+This is done using the function `create_crimap_input`. This requires the `deer.abel` and `deer.famped` objects, but also requires additional inputs such as `analysisID`, used as a flag for running CRI-MAP. An ordered list of SNP loci (`snplist = `) *or* a chromosome number (`chr = `) must be specified. It is also possible to specify the directory to which the output should be written, and `clear.existing.analysisID` will get rid of any previous builds carried out with the same analysisID. Let's run the analysis for chromosome 3, and give it the analysisID `3a`.
 
 ```{r}
 library(crimaptools)
@@ -52,29 +54,35 @@ In the directory `crimap`, an input file `chr3a.gen` will have been created.
 
 ### 3. Run *prepare* and extract and deal with mendelian errors.
 
-The .gen file must now be run through *prepare* to produce the field used for linkage mapping and crossover estimation. This can be done using the function `run_crimap_prepare`. At present this inefficiently has to define the path to the CRI-MAP exectuable (in future versions it will be bundled with the library). At the moment, the exectuable path is specified relative to the .gen file - for example, below, the CRI-MAP executable is in the same directory as the .gen file: 
+The `.gen` file must now be run through *prepare* to produce the field used for linkage mapping and crossover estimation. This can be done using the function `run_crimap_prepare`. At present this inefficiently has to define the path to the CRI-MAP exectuable (in future versions it will be bundled with the library). At the moment, the exectuable path is specified relative to the `.gen` file - for example, below, the CRI-MAP executable is in the same directory as the `.gen` file: 
 
 ```{r}
 
-run_crimap_prepare("crimap2504.exe", "crimap/chr3a.gen")
+run_crimap_prepare(crimap.path = "crimap2504.exe", genfile = "crimap/chr3a.gen")
 dir("crimap")
 
 ```
 
-The function has produced the .pre, .loc, .par and .dat files. The .pre file will contain information on mendelian errors between parents and offspring, which can be extracted using the `parse_mend_err` function. This creates a further file with the extension ".mnd", which has a column for each ID and the problematic locus:
+The function has produced the `.pre`, `.loc`, `.par` and `.dat` files. The .pre file will contain information on mendelian errors between parents and offspring, which can be extracted using the `parse_mend_err` function. This creates a further file with the extension `.mnd`, which has a column for each ID and the problematic locus:
 
 ```{r}
-parse_mend_err("crimap/chr3a.pre", "crimap/chr3a.gen", familyPedigree = deer.famped)
+parse_mend_err(prefile = "crimap/chr3a.pre",
+               genfile = "crimap/chr3a.gen",
+               familyPedigree = deer.famped)
 
 read.table("crimap/chr3a.mnd", header = T)
 
 ```
 
-Information from this file can be used to mask mendelian errors in the .gen file, by rerunning the `create_crimap_input` with `use.mnd = TRUE`:
+Information from this file can be used to mask mendelian errors in the `.gen` file, by rerunning the `create_crimap_input` with `use.mnd = TRUE`:
 
 ```{r}
-create_crimap_input (deer.abel, deer.famped, analysisID = "3a",
-                     chr = 3, outdir = "crimap", clear.existing.analysisID = TRUE,
+create_crimap_input (gwaa.data = deer.abel,
+                     familyPedigree = deer.famped,
+                     analysisID = "3a",
+                     chr = 3,
+                     outdir = "crimap",
+                     clear.existing.analysisID = TRUE,
                      use.mnd = TRUE)
 
 run_crimap_prepare(crimap.path = "crimap2504.exe", genfile = "crimap/chr3a.gen")
