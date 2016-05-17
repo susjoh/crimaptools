@@ -112,7 +112,7 @@ create_crimap_input <- function(gwaa.data,
 
         for(i in del.vec){
 
-          system("cmd", input = paste0("del ", i), show.output.on.console = F)
+          system("cmd", input = paste0("del ", gsub("/", "\\\\", i)), show.output.on.console = F)
         }
 
       }
@@ -290,12 +290,13 @@ create_crimap_input <- function(gwaa.data,
 
   }
 
-  if(verbose == TRUE) message(paste0("Parsing and writing to ", outfile, "..."))
 
 
   #~~ deal with mendelian errors if specified
 
   if(use.mnd == TRUE){
+
+    if(verbose == TRUE) message("Masking Mendelian errors...")
 
     menderrtab <- read.table(paste0(out.path.stem, ".mnd"), header = T, stringsAsFactors = F)
 
@@ -311,7 +312,13 @@ create_crimap_input <- function(gwaa.data,
 
     }
 
+    if(verbose == TRUE) message("...done.")
+
+
   }
+
+  if(verbose == TRUE) message(paste0("Parsing and writing to ", outfile, "..."))
+
 
   temp.geno <- as.matrix(temp.geno)
 
