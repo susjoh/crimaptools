@@ -1,12 +1,12 @@
 #' run_crimap_chrompic: Run chrompic in crimap
 #'
-#' @param crimap.path path to run crimap. This should be given relative to the
-#'   same directory as...
 #' @param genfile path to the .gen file for running the chrompic function.
+#' @param crimap.path path to run crimap. This should be given relative to the
+#'   same directory as the genfile. Non-windows only at present.
 #' @export
 
 
-run_crimap_chrompic <- function(crimap.path, genfile){
+run_crimap_chrompic <- function(genfile, crimap.path = NULL){
 
   #~~ parse crimap.file if in another directory
 
@@ -21,8 +21,9 @@ run_crimap_chrompic <- function(crimap.path, genfile){
 
 
   if(Sys.info()["sysname"] == "Windows") {
+    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
 
-    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = T)
+    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = F)
     system("cmd", input = "del *.cg", show.output.on.console = F)
 
 

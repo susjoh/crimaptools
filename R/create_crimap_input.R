@@ -14,7 +14,9 @@
 #'   females, except for pseudoautosomal SNPs when defined (see below)
 #' @param pseudoautoSNPs Character vector of pseudoautosomal SNP IDs. Only used
 #'   if is.X or is.Z == TRUE.
-#' @param use.mnd logical, default = FALSE. Masks parent offspring genotype mismatches based on output from parse_mend_err
+#' @param use.mnd logical, default = FALSE. Masks parent offspring genotype
+#'   mismatches based on output from parse_mend_err
+#' @param use.specific.mnd string, path to specific .mnd file to use.
 #' @param outdir String, optional. Specify the path of the directory in which
 #'   the output file should be written.
 #' @param verbose Logical. FALSE will suppress messages.
@@ -55,6 +57,7 @@ create_crimap_input <- function(gwaa.data,
                                 is.Z = FALSE,
                                 pseudoautoSNPs = NULL,
                                 use.mnd = FALSE,
+                                use.specific.mnd = NULL,
                                 outdir = NULL,
                                 verbose = TRUE,
                                 clear.existing.analysisID = TRUE) {
@@ -99,10 +102,10 @@ create_crimap_input <- function(gwaa.data,
 
     if(use.mnd == TRUE & paste0("chr", analysisID, ".mnd") %in% del.vec){
 
-        del.vec <- del.vec[-which(del.vec == paste0("chr", analysisID, ".mnd"))]
-        del.vec <- del.vec[-which(del.vec == paste0("chr", analysisID, ".mndverbose"))]
+      del.vec <- del.vec[-which(del.vec == paste0("chr", analysisID, ".mnd"))]
+      del.vec <- del.vec[-which(del.vec == paste0("chr", analysisID, ".mndverbose"))]
 
-        }
+    }
 
 
     if(Sys.info()["sysname"] == "Windows") {
@@ -295,11 +298,19 @@ create_crimap_input <- function(gwaa.data,
 
   #~~ deal with mendelian errors if specified
 
-  if(use.mnd == TRUE){
+  if(use.mnd == TRUE || !is.null(use.specific.mnd)){
 
     if(verbose == TRUE) message("Masking Mendelian errors...")
 
-    menderrtab <- read.table(paste0(out.path.stem, ".mnd"), header = T, stringsAsFactors = F)
+    if(!is.null(use.specific.mnd)){
+
+      menderrtab <- read.table(use.specific.mnd, header = T, stringsAsFactors = F)
+
+    } else {
+
+      menderrtab <- read.table(paste0(out.path.stem, ".mnd"), header = T, stringsAsFactors = F)
+
+    }
 
     if(nrow(menderrtab) > 0){
 

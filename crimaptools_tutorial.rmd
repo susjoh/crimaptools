@@ -54,11 +54,11 @@ In the directory `crimap`, an input file `chr3a.gen` will have been created.
 
 ### 3. Run *prepare* and extract and deal with mendelian errors.
 
-The `.gen` file must now be run through *prepare* to produce the field used for linkage mapping and crossover estimation. This can be done using the function `run_crimap_prepare`. At present this inefficiently has to define the path to the CRI-MAP exectuable (in future versions it will be bundled with the library). At the moment, the exectuable path is specified relative to the `.gen` file - for example, below, the CRI-MAP executable is in the same directory as the `.gen` file: 
+The `.gen` file must now be run through *prepare* to produce the field used for linkage mapping and crossover estimation. This can be done using the function `run_crimap_prepare`. NB. In non-Windows systems at the moment, the exectuable path must be specified relative to the `.gen` file with the argument `crimap.path = `.
 
 ```{r}
 
-run_crimap_prepare(crimap.path = "crimap2504.exe", genfile = "crimap/chr3a.gen")
+run_crimap_prepare(genfile = "crimap/chr3a.gen")
 dir("crimap")
 
 ```
@@ -85,7 +85,7 @@ create_crimap_input (gwaa.data = deer.abel,
                      clear.existing.analysisID = TRUE,
                      use.mnd = TRUE)
 
-run_crimap_prepare(crimap.path = "crimap2504.exe", genfile = "crimap/chr3a.gen")
+run_crimap_prepare(genfile = "crimap/chr3a.gen")
 
 parse_mend_err(prefile = "crimap/chr3a.pre", genfile = "crimap/chr3a.gen", familyPedigree = deer.famped)
 
@@ -96,7 +96,7 @@ Now the dataset is ready for linkage mapping and characterisation of crossovers.
 
 ```{r}
 
-run_crimap_map(crimap.path = "crimap2504.exe", genfile = "crimap/chr3a.gen")
+run_crimap_map(genfile = "crimap/chr3a.gen")
 dir("crimap")
 
 deer.map <- parse_map(mapfile = "crimap/chr3a.map")
@@ -109,7 +109,7 @@ head(deer.map)
 The recombination events can be obtained by running `run_crimap_chrompic`, which again may be slow for larger numbers of markers/families. A sex averaged linkage map can be parsed with `parse_map_chrompic` and crossovers can be extracted with `parse_crossovers`, which also requires the family pedigree:
 
 ```{r}
-run_crimap_chrompic(crimap.path = "crimap2504.exe", genfile = "crimap/chr3a.gen")
+run_crimap_chrompic(genfile = "crimap/chr3a.gen")
 
 deer.cmpmap <- parse_map_chrompic(chrompicfile = "crimap/chr3a.cmp")
 head(deer.cmpmap)

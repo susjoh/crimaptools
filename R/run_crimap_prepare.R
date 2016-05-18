@@ -3,13 +3,13 @@
 #' NB. This function will delete all files associated with the
 #' analysis suffix, except the .gen file.
 #'
-#' @param crimap.path path to run crimap. This should be given relative to the
-#'   same directory as...
 #' @param genfile path for crimap .gen file.
+#' @param crimap.path path to run crimap. This should be given relative to the
+#'   same directory as the genfile. Non-windows only at present.
 #' @export
 
 
-run_crimap_prepare <- function(crimap.path, genfile){
+run_crimap_prepare <- function(genfile){
 
   #~~ parse crimap.file if in another directory
 
@@ -35,6 +35,7 @@ run_crimap_prepare <- function(crimap.path, genfile){
 
 
   if(Sys.info()["sysname"] == "Windows") {
+    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
 
     if(length(del.vec) > 0){
 

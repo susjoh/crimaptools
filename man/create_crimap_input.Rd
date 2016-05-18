@@ -6,8 +6,8 @@
 \usage{
 create_crimap_input(gwaa.data, familyPedigree, analysisID, snplist = NULL,
   chr = NULL, is.X = FALSE, is.Z = FALSE, pseudoautoSNPs = NULL,
-  use.mnd = FALSE, outdir = NULL, verbose = TRUE,
-  clear.existing.analysisID = TRUE)
+  use.mnd = FALSE, use.specific.mnd = NULL, outdir = NULL,
+  verbose = TRUE, clear.existing.analysisID = TRUE)
 }
 \arguments{
 \item{gwaa.data}{GenABEL gwaa.data object containing genomic data}
@@ -32,7 +32,10 @@ females, except for pseudoautosomal SNPs when defined (see below)}
 \item{pseudoautoSNPs}{Character vector of pseudoautosomal SNP IDs. Only used
 if is.X or is.Z == TRUE.}
 
-\item{use.mnd}{logical, default = FALSE. Masks parent offspring genotype mismatches based on output from parse_mend_err}
+\item{use.mnd}{logical, default = FALSE. Masks parent offspring genotype
+mismatches based on output from parse_mend_err}
+
+\item{use.specific.mnd}{string, path to specific .mnd file to use.}
 
 \item{outdir}{String, optional. Specify the path of the directory in which
 the output file should be written.}
