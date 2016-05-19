@@ -33,7 +33,7 @@ run_crimap_map <- function(genfile, crimap.path = NULL){
     system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " build > chr", crimap.stem, ".map"), show.output.on.console = F)
 
   } else {
-    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/linux/crimap")
+    crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
 
     system(paste0(crimap.path, " ", crimap.stem, " build > chr", crimap.stem, ".map"))
 

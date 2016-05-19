@@ -35,7 +35,7 @@ run_crimap_flips <- function(genfile, crimap.path = NULL, flips = 2){
 
   } else {
 
-    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/linux/crimap")
+    crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
 
     eval(
       parse(

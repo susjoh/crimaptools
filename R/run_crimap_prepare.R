@@ -50,7 +50,7 @@ run_crimap_prepare <- function(genfile, build = FALSE, crimap.path = NULL){
     if(build == TRUE)  system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " prepare < crimapinput2 > chr", crimap.stem, ".pre"), show.output.on.console = F)
 
   } else {
-    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/linux/crimap")
+    crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
 
     for(i in del.vec){
 
