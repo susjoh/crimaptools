@@ -9,11 +9,9 @@
 #' @export
 
 
-run_crimap_prepare <- function(genfile){
+run_crimap_prepare <- function(genfile, build = FALSE){
 
   #~~ parse crimap.file if in another directory
-
-  # if(length(grep("..", crimap.file, fixed = T)) > 0) stop("This function will only work if the crimap file is in a sub-directory of the working directory")
 
   crimap.file <- gsub("\\\\", "/", genfile)
 
@@ -21,12 +19,12 @@ run_crimap_prepare <- function(genfile){
 
   if(length(crimap.file) > 1) setwd(paste(crimap.file[1:(length(crimap.file)-1)], collapse = "/"))
 
-  #if(!crimap.path %in% dir()) stop("This function will only work if the crimap.path is in the same directory as the crimap file.")
-
   crimap.stem <- gsub("^chr", "", crimap.file[length(crimap.file)])
   crimap.stem <- gsub(".gen$", "", crimap.stem)
 
   if(!file.exists("crimapinput1")) write.table(data.frame(c("n", "n", "n", "n", 7, "y", "y")), "crimapinput1", row.names = F, col.names = F, quote = F)
+  if(build == TRUE & !file.exists("crimapinput2")) write.table(data.frame(c("n", "n", "n", "n", 1, "y", "y")), "crimapinput2", row.names = F, col.names = F, quote = F)
+
 
   del.vec <- grep(paste0("chr", crimap.stem, "."), dir(), value = T)
   del.vec <- del.vec[-which(del.vec == paste0("chr", crimap.stem, ".gen"))]
@@ -46,7 +44,8 @@ run_crimap_prepare <- function(genfile){
 
     }
 
-    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"), show.output.on.console = F)
+    if(build == FALSE) system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"), show.output.on.console = F)
+    if(build == TRUE)  system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " prepare < crimapinput2 > chr", crimap.stem, ".pre"), show.output.on.console = F)
 
   } else {
 
@@ -54,7 +53,8 @@ run_crimap_prepare <- function(genfile){
 
       system(paste0("rm ", i), show.output.on.console = F)
     }
-    system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"), show.output.on.console = F)
+    if(build == FALSE) system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"), show.output.on.console = F)
+    if(build == TRUE)  system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput2 > chr", crimap.stem, ".pre"), show.output.on.console = F)
 
   }
 

@@ -4,13 +4,13 @@
 \alias{run_crimap_prepare}
 \title{run_crimap_prepare: Run prepare in crimap}
 \usage{
-run_crimap_prepare(crimap.path, genfile)
+run_crimap_prepare(genfile, build = FALSE)
 }
 \arguments{
-\item{crimap.path}{path to run crimap. This should be given relative to the
-same directory as...}
-
 \item{genfile}{path for crimap .gen file.}
+
+\item{crimap.path}{path to run crimap. This should be given relative to the
+same directory as the genfile. Non-windows only at present.}
 }
 \description{
 NB. This function will delete all files associated with the

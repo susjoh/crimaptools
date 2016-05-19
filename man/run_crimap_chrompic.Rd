@@ -4,13 +4,13 @@
 \alias{run_crimap_chrompic}
 \title{run_crimap_chrompic: Run chrompic in crimap}
 \usage{
-run_crimap_chrompic(crimap.path, genfile)
+run_crimap_chrompic(genfile, crimap.path = NULL)
 }
 \arguments{
-\item{crimap.path}{path to run crimap. This should be given relative to the
-same directory as...}
-
 \item{genfile}{path to the .gen file for running the chrompic function.}
+
+\item{crimap.path}{path to run crimap. This should be given relative to the
+same directory as the genfile. Non-windows only at present.}
 }
 \description{
 run_crimap_chrompic: Run chrompic in crimap
