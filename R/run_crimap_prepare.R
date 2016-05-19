@@ -9,7 +9,7 @@
 #' @export
 
 
-run_crimap_prepare <- function(genfile, build = FALSE){
+run_crimap_prepare <- function(genfile, build = FALSE, crimap.path = NULL){
 
   #~~ parse crimap.file if in another directory
 
