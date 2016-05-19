@@ -9,6 +9,7 @@
 run_crimap_map <- function(genfile, crimap.path = NULL){
 
   #~~ parse crimap.file if in another directory
+  pwd <- getwd()
 
   crimap.file <- gsub("\\\\", "/", genfile)
 
@@ -32,15 +33,16 @@ run_crimap_map <- function(genfile, crimap.path = NULL){
     system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " build > chr", crimap.stem, ".map"), show.output.on.console = F)
 
   } else {
+    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/linux/crimap")
 
-    system(paste0(crimap.path, " ", crimap.stem, " build > chr", crimap.stem, ".map"), show.output.on.console = F)
+    system(paste0(crimap.path, " ", crimap.stem, " build > chr", crimap.stem, ".map"))
 
   }
 
 
   crimap.file  <- crimap.file[-length(crimap.file)]
 
-  setwd(paste(rep("..", times = length(crimap.file)), collapse = "/"))
+  setwd(pwd)
 
 
 }

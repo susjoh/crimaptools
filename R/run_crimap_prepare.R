@@ -11,6 +11,8 @@
 
 run_crimap_prepare <- function(genfile, build = FALSE, crimap.path = NULL){
 
+
+  pwd <- getwd()
   #~~ parse crimap.file if in another directory
 
   crimap.file <- gsub("\\\\", "/", genfile)
@@ -48,20 +50,21 @@ run_crimap_prepare <- function(genfile, build = FALSE, crimap.path = NULL){
     if(build == TRUE)  system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " prepare < crimapinput2 > chr", crimap.stem, ".pre"), show.output.on.console = F)
 
   } else {
+    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/linux/crimap")
 
     for(i in del.vec){
 
-      system(paste0("rm ", i), show.output.on.console = F)
+      system(paste0("rm ", i))
     }
-    if(build == FALSE) system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"), show.output.on.console = F)
-    if(build == TRUE)  system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput2 > chr", crimap.stem, ".pre"), show.output.on.console = F)
+    if(build == FALSE) system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"))
+    if(build == TRUE)  system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput2 > chr", crimap.stem, ".pre"))
 
   }
 
 
   crimap.file  <- crimap.file[-length(crimap.file)]
 
-  setwd(paste(rep("..", times = length(crimap.file)), collapse = "/"))
+  setwd(pwd)
 
 
 }

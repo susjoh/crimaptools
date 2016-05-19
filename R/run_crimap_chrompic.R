@@ -9,6 +9,7 @@
 run_crimap_chrompic <- function(genfile, crimap.path = NULL){
 
   #~~ parse crimap.file if in another directory
+  pwd <- getwd()
 
   crimap.file <- gsub("\\\\", "/", genfile)
 
@@ -28,16 +29,17 @@ run_crimap_chrompic <- function(genfile, crimap.path = NULL){
 
 
   } else {
+    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/linux/crimap")
 
-    system(paste0(crimap.path, " ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = F)
-    system("rm *.cg", show.output.on.console = F)
+    system(paste0(crimap.path, " ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"))
+    system("rm *.cg")
 
   }
 
 
   crimap.file  <- crimap.file[-length(crimap.file)]
 
-  setwd(paste(rep("..", times = length(crimap.file)), collapse = "/"))
+  setwd(pwd)
 
 
 }

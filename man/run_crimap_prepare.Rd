@@ -4,7 +4,7 @@
 \alias{run_crimap_prepare}
 \title{run_crimap_prepare: Run prepare in crimap}
 \usage{
-run_crimap_prepare(genfile, build = FALSE)
+run_crimap_prepare(genfile, build = FALSE, crimap.path = NULL)
 }
 \arguments{
 \item{genfile}{path for crimap .gen file.}

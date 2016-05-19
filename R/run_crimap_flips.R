@@ -10,6 +10,7 @@
 run_crimap_flips <- function(genfile, crimap.path = NULL, flips = 2){
 
   #~~ parse crimap.file if in another directory
+  pwd <- getwd()
 
   crimap.file <- gsub("\\\\", "/", genfile)
 
@@ -34,9 +35,11 @@ run_crimap_flips <- function(genfile, crimap.path = NULL, flips = 2){
 
   } else {
 
+    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/linux/crimap")
+
     eval(
       parse(
-        text = paste0(crimap.path, " ", crimap.stem, " flips", flips, " > chr", crimap.stem, ".fl", flips, "\", show.output.on.console = F)")
+        text = paste0(crimap.path, " ", crimap.stem, " flips", flips, " > chr", crimap.stem, ".fl", flips, "\")")
       )
     )
   }
@@ -44,7 +47,7 @@ run_crimap_flips <- function(genfile, crimap.path = NULL, flips = 2){
 
   crimap.file  <- crimap.file[-length(crimap.file)]
 
-  setwd(paste(rep("..", times = length(crimap.file)), collapse = "/"))
+  setwd(pwd)
 
 
 }
