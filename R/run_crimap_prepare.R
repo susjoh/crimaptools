@@ -4,12 +4,10 @@
 #' analysis suffix, except the .gen file.
 #'
 #' @param genfile path for crimap .gen file.
-#' @param crimap.path path to run crimap. This should be given relative to the
-#'   same directory as the genfile. Non-windows only at present.
 #' @export
 
 
-run_crimap_prepare <- function(genfile, build = FALSE, crimap.path = NULL){
+run_crimap_prepare <- function(genfile, build = FALSE){
 
 
   pwd <- getwd()

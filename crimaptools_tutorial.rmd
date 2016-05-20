@@ -5,7 +5,9 @@ date: "17 May 2016"
 output: pdf_document
 ---
 
-This `crimaptools` package creates input files, runs CRI-MAP and parses output files for analyses of linkage mapping and recombination rate estimation in CRI-MAP v2.504. This packages is still in progress in terms of optimisation (particularly dealing with unusual CRI-MAP syntax), but should run if instructions are followed carefully. To download CRI-MAP, which is currently tirelessly maintained by Jill Maddox, go [here](http://www.animalgenome.org/tools/share/crimap/). For more information on how to use it from the command line, check out Paris Veltsos's tutorial [here](http://www.parisveltsos.com/research/crimap/index.html). 
+This `crimaptools` package creates input files, runs CRI-MAP and parses output files for analyses of linkage mapping and recombination rate estimation in CRI-MAP v2.504 (Windows) and CRI-MAP v2.507 (Linux). CRI-MAP is tirelessly maintained by [Jill Maddox](http://www.animalgenome.org/tools/share/crimap/) - `crimaptools` is merely a wrapper for carrying out commonly run CRI-MAP functions.
+
+The `crimaptools` package is still in progress in terms of optimisation , but should run if instructions are followed carefully. Compiled CRI-MAP is bundled with this library. For more information on how it is used from the command line, check out Paris Veltsos's tutorial [here](http://www.parisveltsos.com/research/crimap/index.html). 
 
 The package can be installed using devtools:
 
@@ -54,7 +56,7 @@ In the directory `crimap`, an input file `chr3a.gen` will have been created.
 
 ### 3. Run *prepare* and extract and deal with mendelian errors.
 
-The `.gen` file must now be run through *prepare* to produce the field used for linkage mapping and crossover estimation. This can be done using the function `run_crimap_prepare`. NB. In non-Windows systems at the moment, the exectuable path must be specified relative to the `.gen` file with the argument `crimap.path = `.
+The `.gen` file must now be run through *prepare* to produce the field used for linkage mapping and crossover estimation. This can be done using the function `run_crimap_prepare`.
 
 ```{r}
 

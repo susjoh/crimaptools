@@ -81,12 +81,17 @@ create_crimap_input <- function(gwaa.data,
 
   }
 
-  if(use.mnd == TRUE & !paste0("chr", analysisID, ".mnd") %in% dir(outdir)){
+  if(is.null(outdir)){
+    if(use.mnd == TRUE & !paste0("chr", analysisID, ".mnd") %in% dir()){
+      stop(paste0("use.mnd == TRUE, but there is no file named chr",
+                  analysisID, ".mnd. Change to FALSE and/or run parse_mend_err()."))
+    }
+  } else if(use.mnd == TRUE & !paste0("chr", analysisID, ".mnd") %in% dir(outdir)){
     stop(paste0("use.mnd == TRUE, but there is no file named chr",
                 analysisID, ".mnd. Change to FALSE and/or run parse_mend_err()."))
   }
 
-  dir.create(outdir, showWarnings = FALSE)
+  if(!is.null(outdir)) dir.create(outdir, showWarnings = FALSE)
 
 
 
@@ -98,7 +103,9 @@ create_crimap_input <- function(gwaa.data,
 
   if(clear.existing.analysisID == TRUE){
 
-    del.vec <- grep(paste0("chr", analysisID, "."), dir(outdir), value = T)
+    if(!is.null(outdir)) del.vec <- grep(paste0("chr", analysisID, "."), dir(outdir), value = T)
+    if( is.null(outdir)) del.vec <- grep(paste0("chr", analysisID, "."), dir(), value = T)
+
 
     if(use.mnd == TRUE & paste0("chr", analysisID, ".mnd") %in% del.vec){
 

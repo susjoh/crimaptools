@@ -4,13 +4,10 @@
 \alias{run_crimap_flips}
 \title{run_crimap_flips: Run flips}
 \usage{
-run_crimap_flips(genfile, crimap.path = NULL, flips = 2)
+run_crimap_flips(genfile, flips = 2)
 }
 \arguments{
 \item{genfile}{path to the .gen file for running the chrompic function.}
-
-\item{crimap.path}{path to run crimap. This should be given relative to the
-same directory as the genfile. Non-windows only at present.}
 
 \item{flips}{number of loci to flip.}
 }

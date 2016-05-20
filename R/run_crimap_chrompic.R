@@ -1,12 +1,10 @@
 #' run_crimap_chrompic: Run chrompic in crimap
 #'
 #' @param genfile path to the .gen file for running the chrompic function.
-#' @param crimap.path path to run crimap. This should be given relative to the
-#'   same directory as the genfile. Non-windows only at present.
 #' @export
 
 
-run_crimap_chrompic <- function(genfile, crimap.path = NULL){
+run_crimap_chrompic <- function(genfile){
 
   #~~ parse crimap.file if in another directory
   pwd <- getwd()

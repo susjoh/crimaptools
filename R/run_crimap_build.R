@@ -1,12 +1,10 @@
 #' run_crimap_build: Run chrompic in crimap
 #'
 #' @param genfile path to the .gen file for running the chrompic function.
-#' @param crimap.path path to run crimap. This should be given relative to the
-#'   same directory as the genfile. Non-windows only at present.
 #' @export
 
 
-run_crimap_build <- function(genfile, crimap.path = NULL){
+run_crimap_build <- function(genfile, PLT = NULL){
 
   #~~ parse crimap.file if in another directory
   pwd <- getwd()
@@ -22,17 +20,34 @@ run_crimap_build <- function(genfile, crimap.path = NULL){
 
   if(!paste0("chr", crimap.stem, ".ord") %in% dir()) stop("Requires ord file - use run_crimap_prepare with build = TRUE")
 
-  if(Sys.info()["sysname"] == "Windows") {
-    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
+  bld.run <- 1
 
-    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " build > chr", crimap.stem, ".bld"), show.output.on.console = F)
+  if(length(grep(paste0("chr", crimap.stem, ".bld"), dir())) > 0){
+    prev.run <- grep(paste0("chr", crimap.stem, ".bld"), dir(), value = T)
+    prev.run <- as.numeric(substr(prev.run, nchar(prev.run), nchar(prev.run)))
+    bld.run <- max(prev.run) + 1
+
+    if(!is.null(PLT)){
+
+      par.file <- readLines(paste0("chr", crimap.stem, ".par"))
+      par.file[grep("_LIKE_TOL", par.file)] <- c(paste0("PUK_LIKE_TOL  ", PLT, " *"),
+                                                 paste0("PK_LIKE_TOL  ", PLT, " *"))
+      writeLines(par.file, paste0("chr", crimap.stem, ".par"))
+    }
+
+  }
+
+
+  if(Sys.info()["sysname"] == "Windows") {
+
+    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
+    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " build > chr", crimap.stem, ".bld", bld.run), show.output.on.console = F)
 
 
   } else {
 
     crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
-
-    system(paste0(crimap.path, " ", crimap.stem, " build > chr", crimap.stem, ".bld"))
+    system(paste0(crimap.path, " ", crimap.stem, " build > chr", crimap.stem, ".bld", bld.run))
 
   }
 
