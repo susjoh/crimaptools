@@ -26,7 +26,14 @@ parse_mend_err <- function(prefile, genfile, save.mendfile = TRUE, familyPedigre
 
   if(length(x.0) == 0){
 
-    message("No Mendelian errors detected. No changes made to .mnd file.")
+    if(file.exists(gsub(".gen", ".mnd", genfile, fixed = T))) {
+      message("No Mendelian errors detected. No changes made to .mnd file.")
+    }
+
+    if(!file.exists(gsub(".gen", ".mnd", genfile, fixed = T))) {
+      message("No Mendelian errors detected. Blank .mnd file created.")
+      writeLines("ANIMAL\tSNP.Name", gsub(".gen", ".mnd", genfile, fixed = T))
+    }
 
   } else {
 

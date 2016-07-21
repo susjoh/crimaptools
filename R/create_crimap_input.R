@@ -42,6 +42,14 @@
 # outdir = "crimap"
 # verbose = TRUE
 # clear.existing.analysisID = TRUE
+#
+# gwaa.data = deer.abel
+# snplist = snp.list
+# familyPedigree = deer.famped
+# analysisID = "2a"
+# outdir = "crimap"
+# clear.existing.analysisID = TRUE
+# use.mnd = TRUE
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Create Crimap Files
@@ -110,7 +118,12 @@ create_crimap_input <- function(gwaa.data,
     if(use.mnd == TRUE & paste0("chr", analysisID, ".mnd") %in% del.vec){
 
       del.vec <- del.vec[-which(del.vec == paste0("chr", analysisID, ".mnd"))]
-      del.vec <- del.vec[-which(del.vec == paste0("chr", analysisID, ".mndverbose"))]
+
+      if(paste0("chr", analysisID, ".mndverbose") %in% del.vec){
+
+        del.vec <- del.vec[-which(del.vec == paste0("chr", analysisID, ".mndverbose"))]
+
+        }
 
     }
 

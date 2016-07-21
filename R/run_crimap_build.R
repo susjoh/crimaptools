@@ -18,7 +18,12 @@ run_crimap_build <- function(genfile, PLT = NULL){
   crimap.stem <- gsub("^chr", "", crimap.file[length(crimap.file)])
   crimap.stem <- gsub(".gen$", "", crimap.stem)
 
-  if(!paste0("chr", crimap.stem, ".ord") %in% dir()) stop("Requires ord file - use run_crimap_prepare with build = TRUE")
+#   if(!paste0("chr", crimap.stem, ".ord") %in% dir()){
+#
+#     setwd(pwd)
+#     stop("Requires ord file - use run_crimap_prepare with build = TRUE")
+#
+#   }
 
   bld.run <- 1
 

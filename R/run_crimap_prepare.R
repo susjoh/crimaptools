@@ -4,11 +4,21 @@
 #' analysis suffix, except the .gen file.
 #'
 #' @param genfile path for crimap .gen file.
+#' @import plyr
 #' @export
 
 
-run_crimap_prepare <- function(genfile, build = FALSE){
 
+run_crimap_prepare <- function(genfile, build = FALSE, snplist = NULL, snpinsert = NULL){
+
+  if(!is.null(snplist) & build == FALSE){
+    message("snplist is specified - changed to build = TRUE")
+    build <- TRUE
+  }
+
+  if(!is.null(snpinsert) & is.null(snplist)){
+    stop("snplist must be specified if snpinsert is specified.")
+  }
 
   pwd <- getwd()
   #~~ parse crimap.file if in another directory
@@ -28,9 +38,58 @@ run_crimap_prepare <- function(genfile, build = FALSE){
 
   del.vec <- grep(paste0("chr", crimap.stem, "."), dir(), value = T)
   del.vec <- del.vec[-which(del.vec == paste0("chr", crimap.stem, ".gen"))]
-  del.vec <- del.vec[-which(del.vec == paste0("chr", crimap.stem, ".mnd"))]
-  del.vec <- del.vec[-which(del.vec == paste0("chr", crimap.stem, ".mndverbose"))]
 
+  if(paste0("chr", crimap.stem, ".mnd") %in% del.vec){
+
+    del.vec <- del.vec[-which(del.vec == paste0("chr", crimap.stem, ".mnd"))]
+
+  }
+
+  if(paste0("chr", crimap.stem, ".mndverbose") %in% del.vec){
+
+    del.vec <- del.vec[-which(del.vec == paste0("chr", crimap.stem, ".mndverbose"))]
+
+  }
+
+  if(!is.null(snplist)){
+
+    #~~ read the SNP loci from the gen file to get indices
+
+
+
+    x <- readLines(paste0("chr", crimap.stem, ".gen"))
+    x.order <- x[4:(as.numeric(x[2])+3)]
+    rm(x)
+
+    x.order <- data.frame(SNP.Name = x.order,
+                          Index = 0:(length(x.order)-1))
+
+    snplist.work <- data.frame(SNP.Name = snplist)
+    suppressMessages(snplist.work <- join(snplist.work, x.order))
+    snplist.index <- snplist.work$Index
+    snplist.index <- paste(c(snplist.work$Index, "*"), collapse = " ")
+
+
+    if(!is.null(snpinsert)){
+      snpinsert.work <- data.frame(SNP.Name = snpinsert)
+      suppressMessages(snpinsert.work <- join(snpinsert.work, x.order))
+      snpinsert.index <- paste(c(snpinsert.work$Index, "*"), collapse = " ")
+    } else {
+
+      snpinsert.index <- "*"
+    }
+
+  }
+
+  #~~ Create the crimap input for the analysis
+
+  if(build == TRUE & !is.null(snplist)){
+
+    write.table(data.frame(c("n", "n", "n", "n", 1, "n", snplist.index, snpinsert.index, "y", "y")),
+                "crimapinput3", row.names = F, col.names = F, quote = F)
+
+
+  }
 
   if(Sys.info()["sysname"] == "Windows") {
     crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
@@ -45,7 +104,8 @@ run_crimap_prepare <- function(genfile, build = FALSE){
     }
 
     if(build == FALSE) system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"), show.output.on.console = F)
-    if(build == TRUE)  system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " prepare < crimapinput2 > chr", crimap.stem, ".pre"), show.output.on.console = F)
+    if(build == TRUE & is.null(snplist))  system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " prepare < crimapinput2 > chr", crimap.stem, ".pre"), show.output.on.console = F)
+    if(build == TRUE & !is.null(snplist))  system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " prepare < crimapinput3 > chr", crimap.stem, ".pre"), show.output.on.console = F)
 
   } else {
     crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
@@ -55,7 +115,8 @@ run_crimap_prepare <- function(genfile, build = FALSE){
       system(paste0("rm ", i))
     }
     if(build == FALSE) system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput1 > chr", crimap.stem, ".pre"))
-    if(build == TRUE)  system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput2 > chr", crimap.stem, ".pre"))
+    if(build == TRUE & is.null(snplist))  system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput2 > chr", crimap.stem, ".pre"))
+    if(build == TRUE & !is.null(snplist))  system(paste0(crimap.path, " ", crimap.stem, " prepare < crimapinput3 > chr", crimap.stem, ".pre"))
 
   }
 

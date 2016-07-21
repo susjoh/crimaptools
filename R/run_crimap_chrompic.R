@@ -23,14 +23,14 @@ run_crimap_chrompic <- function(genfile){
     crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
 
     system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = F)
-    system("cmd", input = "del *.cg", show.output.on.console = F)
+    system("cmd", input = paste0("del chr", crimap.stem, "_*.cg"), show.output.on.console = F)
 
 
   } else {
     crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
 
     system(paste0(crimap.path, " ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"))
-    system("rm *.cg")
+    system(paste0("rm chr", crimap.stem, "_*.cg"))
 
   }
 
