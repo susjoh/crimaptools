@@ -4,10 +4,17 @@
 \alias{run_crimap_prepare}
 \title{run_crimap_prepare: Run prepare in crimap}
 \usage{
-run_crimap_prepare(genfile, build = FALSE)
+run_crimap_prepare(genfile, build = FALSE, snplist = NULL,
+  snpinsert = NULL)
 }
 \arguments{
 \item{genfile}{path for crimap .gen file.}
+
+\item{build}{logical. Tells crimap whether to prepare for build analysis.}
+
+\item{snplist}{character vector. Ordered loci for build analysis.}
+
+\item{snpinset}{character vector. Loci to be added to the build.}
 }
 \description{
 NB. This function will delete all files associated with the

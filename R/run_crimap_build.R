@@ -1,6 +1,7 @@
 #' run_crimap_build: Run chrompic in crimap
 #'
 #' @param genfile path to the .gen file for running the chrompic function.
+#' @param PLT numeric. Optional. Specify PUK_LIKE_TOL and PK_LIKE_TOL value.
 #' @export
 
 

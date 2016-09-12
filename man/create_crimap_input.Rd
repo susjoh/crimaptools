@@ -23,6 +23,8 @@ analysisID = "1a" will output the file "chr1a.gen".}
 \item{snplist}{vector, optional. A list of ordered SNPs. UNless build is run,
 SNPs will be assumed to be in this order.}
 
+\item{chr}{string. Chromosome ID if whole chromosome is to be run.}
+
 \item{is.X}{logical. If true, then all heterozygotes are scored as missing in
 males, except for pseudoautosomal SNPs when defined (see below)}
 

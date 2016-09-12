@@ -8,6 +8,7 @@
 #'   analysisID = "1a" will output the file "chr1a.gen".
 #' @param snplist vector, optional. A list of ordered SNPs. UNless build is run,
 #'   SNPs will be assumed to be in this order.
+#' @param chr string. Chromosome ID if whole chromosome is to be run.
 #' @param is.X logical. If true, then all heterozygotes are scored as missing in
 #'   males, except for pseudoautosomal SNPs when defined (see below)
 #' @param is.Z logical. If true, then all heterozygotes are scored as missing in

@@ -4,6 +4,9 @@
 #' analysis suffix, except the .gen file.
 #'
 #' @param genfile path for crimap .gen file.
+#' @param build logical. Tells crimap whether to prepare for build analysis.
+#' @param snplist character vector. Ordered loci for build analysis.
+#' @param snpinset character vector. Loci to be added to the build.
 #' @import plyr
 #' @export
 
