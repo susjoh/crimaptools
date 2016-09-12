@@ -27,8 +27,11 @@ run_crimap_chrompic <- function(genfile){
 
 
   } else {
-    crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
-
+    if(Sys.info()["sysname"] == "Linux"){
+      crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
+    } else {
+      crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/macos/crimap")
+    }
     system(paste0(crimap.path, " ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"))
     system(paste0("rm chr", crimap.stem, "_*.cg"))
 

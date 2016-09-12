@@ -52,7 +52,11 @@ run_crimap_build <- function(genfile, PLT = NULL){
 
   } else {
 
-    crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
+    if(Sys.info()["sysname"] == "Linux"){
+      crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
+    } else {
+      crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/macos/crimap")
+    }
     system(paste0(crimap.path, " ", crimap.stem, " build > chr", crimap.stem, ".bld", bld.run))
 
   }
