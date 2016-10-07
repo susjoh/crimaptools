@@ -23,6 +23,7 @@ parse_flips <- function(flipsfile){
     z <- data.frame(data.table::rbindlist(z))
     names(z) <- paste0("X", 0:(ncol(z)-1))
     names(z)[ncol(z)] <- "LogLi"
+    z$LogLi <- as.numeric(as.character(z$LogLi))
     z
 
   } else {
