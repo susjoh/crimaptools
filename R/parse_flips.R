@@ -20,7 +20,10 @@ parse_flips <- function(flipsfile){
     }
     )
 
-    data.frame(data.table::rbindlist(z))
+    z <- data.frame(data.table::rbindlist(z))
+    names(z) <- paste0("X", 0:(ncol(z)-1))
+    names(z)[ncol(z)] <- "LogLi"
+    
   } else {
     message(paste0("No flips present in ", flipsfile, ": has the flips run finished?"))
     return(NULL)
