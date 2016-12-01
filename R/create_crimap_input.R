@@ -304,10 +304,10 @@ create_crimap_input <- function(gwaa.data,
 
       temp.geno[which(temp.geno$SEX == 0 & temp.geno[,j] %in% heterozygotes),j] <- "0 0"
 
-      temp.geno[which(temp.geno$SEX == 0 & temp.geno[,j] == "1 1"),j] <- "1 0"
-      temp.geno[which(temp.geno$SEX == 0 & temp.geno[,j] == "2 2"),j] <- "2 0"
-      temp.geno[which(temp.geno$SEX == 0 & temp.geno[,j] == "3 3"),j] <- "3 0"
-      temp.geno[which(temp.geno$SEX == 0 & temp.geno[,j] == "4 4"),j] <- "4 0"
+      temp.geno[which(temp.geno$SEX == 0 & temp.geno[,j] == "1 1"),j] <- "1 1"
+      temp.geno[which(temp.geno$SEX == 0 & temp.geno[,j] == "2 2"),j] <- "2 2"
+      temp.geno[which(temp.geno$SEX == 0 & temp.geno[,j] == "3 3"),j] <- "3 3"
+      temp.geno[which(temp.geno$SEX == 0 & temp.geno[,j] == "4 4"),j] <- "4 4"
 
     }
 
