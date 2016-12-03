@@ -5,15 +5,45 @@
 #' @param familyPedigree data.frame containing columns ANIMAL, FATHER, MOTHER
 #'   and FAMILY. FAMILY defines family groups for crimap. IDs in ANIMAL can be
 #'   repeated within and between families if necessary.
+#' @param is.X logical. If true, then Mendelian errors are dealt with
+#'   differently for the homogametic sex (see below).
+#' @param is.Z logical. If true, then Mendelian errors are dealt with
+#'   differently for the homogametic sex (see below).
+#' @param pseudoautoSNPs Character vector of pseudoautosomal SNP IDs. Only used
+#'   if is.X or is.Z == TRUE.
+#' @param genabel.phdata GenABEL phdata object, or data frame with fields
+#'   information on "id" and sex"
 #' @import plyr
 #' @export
 
-# prefile <- "crimap/chr1a.pre"
-# genfile <- "crimap/chr1a.gen"
+# prefile <- "crimap/crimap_b/chr30b.pre"
+# genfile <- "crimap/crimap_b/chr30b.gen"
 # save.mendfile <- TRUE
-# familyPedigree <- deer.famped
+# familyPedigree <- famped
+# is.X = TRUE
+# pseudoautoSNPs = pseudoautoSNPs
+# genabel.phdata = phdata(abeldata)
 
-parse_mend_err <- function(prefile, genfile, save.mendfile = TRUE, familyPedigree){
+parse_mend_err <- function(prefile,
+                           genfile,
+                           save.mendfile = TRUE,
+                           familyPedigree,
+                           is.X = NULL,
+                           is.Z = NULL,
+                           pseudoautoSNPs = NULL,
+                           genabel.phdata = NULL){
+
+  if(is.X == TRUE) message("Running as X chromosome: analysis may take time. Specify pseudoautosomalSNPs to retain some male PAR heterozygotes")
+
+  if(is.Z == TRUE) message("Running as Z chromosome: analysis may take time. Specify pseudoautosomalSNPs to retain some female PAR heterozygotes")
+
+  if(is.X == TRUE || is.Z == TRUE){
+    if(is.null(pseudoautoSNPs)){
+      message("No pseudoautosomal SNPs specified")
+    }
+    if(is.null(phdata)) stop("Running Mendelian check requires information on offspring sex. Please include
+                             genabel.phdata object")
+  }
 
   #~~ read in Mendelian errors
 
@@ -76,6 +106,38 @@ parse_mend_err <- function(prefile, genfile, save.mendfile = TRUE, familyPedigre
 
     menderr$Mat.Mismatch <- mapply(function(x, y) ifelse(length(grep(x, y)) > 0, "no", "yes"), menderr$Mat.Allele, menderr$Mat.UniqueAlleles)
     menderr$Pat.Mismatch <- mapply(function(x, y) ifelse(length(grep(x, y)) > 0, "no", "yes"), menderr$Pat.Allele, menderr$Pat.UniqueAlleles)
+
+    #~~ If sex linked, deal with incorrect mismatches. Sex 1 = male, 0 = female
+
+
+    if(is.X == TRUE || is.Z == TRUE){
+
+      names(genabel.phdata)[which(names(genabel.phdata) == "id")] <- "ANIMAL"
+      menderr <- join(menderr, genabel.phdata[,c("ANIMAL", "sex")])
+
+    }
+
+    # for X, if a father's allele is not in a daughter, it is an error.
+    #        if a father's allele is not in a son, it is not an error.
+
+    if(is.X == TRUE){
+
+      table(menderr$sex, menderr$Pat.Mismatch)
+
+      menderr <- menderr[-which(menderr$Pat.Mismatch == "yes" & menderr$sex == 1),]
+
+
+    }
+
+    if(is.Z == TRUE){
+
+      table(menderr$sex, menderr$Pat.Mismatch)
+
+      menderr <- menderr[-which(menderr$Mat.Mismatch == "yes" & menderr$sex == 0),]
+
+
+    }
+
 
 
     newerrtab <- menderr[,c("ANIMAL", "SNP.Name")]
