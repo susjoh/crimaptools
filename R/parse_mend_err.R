@@ -21,6 +21,7 @@
 # save.mendfile <- TRUE
 # familyPedigree <- famped
 # is.X = TRUE
+# is.Z = TRUE
 # pseudoautoSNPs = pseudoautoSNPs
 # genabel.phdata = phdata(abeldata)
 
@@ -28,8 +29,8 @@ parse_mend_err <- function(prefile,
                            genfile,
                            save.mendfile = TRUE,
                            familyPedigree,
-                           is.X = NULL,
-                           is.Z = NULL,
+                           is.X = FALSE,
+                           is.Z = FALSE,
                            pseudoautoSNPs = NULL,
                            genabel.phdata = NULL){
 
