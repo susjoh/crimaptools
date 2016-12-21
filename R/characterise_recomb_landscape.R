@@ -4,7 +4,6 @@
 #' @param LG.cM  vector of linkage map positions.
 #' @param window.size integer Window size in which recombination rate is estimated (base pairs).
 #' @param verbose logical. Default is TRUE.
-#' @import
 #' @export
 #
 
