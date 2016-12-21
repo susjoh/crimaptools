@@ -79,7 +79,9 @@ characterise_recomb_landscape <- function(LG.vec, LG.pos, LG.cM, window.size, ve
         if(x.after$Order[1] == 1) x.after <- NULL
 
       } else {
+
         x.after <- NULL
+
       }
 
 
