@@ -24,6 +24,9 @@
 #' @param clear.existing.analysisID Logical, default is TRUE. Overwrites .gen
 #'   file and deletes crimap files that have the analysisID in the target
 #'   directory.
+#' @param dummy.parent.id numeric. This is an identifier for IDs that should
+#'   be filled in with blank genotypes, for example, because CRIMAP cannot deal
+#'   with a single parent.
 #' @import GenABEL
 #' @import data.table
 #' @import plyr
@@ -69,7 +72,9 @@ create_crimap_input <- function(gwaa.data,
                                 use.specific.mnd = NULL,
                                 outdir = NULL,
                                 verbose = TRUE,
-                                clear.existing.analysisID = TRUE) {
+                                clear.existing.analysisID = TRUE,
+                                dummy.mother.id = NULL,
+                                dummy.father.id = NULL) {
 
   #~~ Check that analysisID starts with a number
 
@@ -84,7 +89,7 @@ create_crimap_input <- function(gwaa.data,
 
   if(is.Z == TRUE) message("Running as Z chromosome: specify pseudoautosomalSNPs to retain some female PAR heterozygotes")
 
-  if(any(which(!c(familyPedigree[,1], familyPedigree[,2], familyPedigree[,3]) %in% c(idnames(gwaa.data), 0, NA)))){
+  if(any(which(!c(familyPedigree[,1], familyPedigree[,2], familyPedigree[,3]) %in% c(idnames(gwaa.data), 0, NA, dummy.father.id, dummy.mother.id)))){
 
     stop("familyPedigree must not contain any IDs that are not in the gwaa.data object.")
 
@@ -229,6 +234,15 @@ create_crimap_input <- function(gwaa.data,
   temp.geno$ANIMAL <- idnames(gwaa.data)
 
   temp.geno$SEX <- phdata(gwaa.data)$sex
+
+  if(!is.null(dummy.father.id)){
+    temp.geno <- rbind(temp.geno, c(rep("0 0", times = length(locus.names)), dummy.father.id, 1))
+  }
+
+  if(!is.null(dummy.mother.id)){
+    temp.geno <- rbind(temp.geno, c(rep("0 0", times = length(locus.names)), dummy.mother.id, 0))
+  }
+
 
   familyPedigree$ANIMAL <- as.character(familyPedigree$ANIMAL)
 
