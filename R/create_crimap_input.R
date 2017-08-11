@@ -349,8 +349,12 @@ create_crimap_input <- function(gwaa.data,
 
     if(nrow(menderrtab) > 0){
 
+      menderrtab <- subset(menderrtab, SNP.Name %in% snpnames(gwaa.data))
+
 
       for(i in 1:nrow(menderrtab)){
+
+
 
         temp.geno[which(temp.geno$ANIMAL == menderrtab$ANIMAL[i]),
                   which(names(temp.geno) == menderrtab$SNP.Name[i])] <- "0 0"
