@@ -10,7 +10,6 @@
 #' @export
 
 
-
 parse_crossovers <- function(chrompicfile, familyPedigree, remove.zero.inf.loci = TRUE){
   #~~ read lines from the chrompic file
 
@@ -56,14 +55,20 @@ parse_crossovers <- function(chrompicfile, familyPedigree, remove.zero.inf.loci 
                             Family = famvec,
                             stringsAsFactors=F)
 
+  
 
-  recombframe$data <- gsub("^  ", " ",  recombframe$data)
-  recombframe$data <- gsub("^   ", " ",  recombframe$data)
 
   #~~ Get the IDs
 
-
-  recombframe$ANIMAL <- unlist(lapply(recombframe$data, function(foo) strsplit(foo, split = " ")[[1]][2]))
+  recombframe$ANIMAL <- unlist(lapply(recombframe$data, function(foo){
+    z <- strsplit(foo, split = "\\s+")[[1]]
+    if(length(z) == ceiling((nmarkers/10)+2)){
+      return(z[1])
+    } else {
+      return(z[2])
+    }
+  }))
+  
   recombframe$parent[which(recombframe$ANIMAL != "")] <- "MOTHER"
   recombframe$ANIMAL[which(recombframe$ANIMAL == "")] <- recombframe$ANIMAL[which(recombframe$ANIMAL != "")]
   recombframe$parent[which(is.na(recombframe$parent))] <- "FATHER"
@@ -72,6 +77,7 @@ parse_crossovers <- function(chrompicfile, familyPedigree, remove.zero.inf.loci 
 
   #~~ get the number of recombinations for each individual
 
+  
   recExtract <- function(CMPstring){
     x <- strsplit(CMPstring, split = " ")[[1]][length(strsplit(CMPstring, split = " ")[[1]])]
   }
@@ -81,8 +87,12 @@ parse_crossovers <- function(chrompicfile, familyPedigree, remove.zero.inf.loci 
   #~~ format the data column so that we can get out the number of informative loci
   removeID <- function(CMPstring){
 
-    x <- strsplit(CMPstring, split = " ")[[1]]
-    paste0(x[3:(length(x)-1)], collapse = "")
+    z <- strsplit(CMPstring, split = "\\s+")[[1]]
+    if(length(z) == ceiling((nmarkers/10)+2)){
+      return(paste0(z[2:(length(z)-1)], collapse = ""))
+    } else {
+      return(paste0(z[3:(length(z)-1)], collapse = ""))
+    }
 
   }
 
