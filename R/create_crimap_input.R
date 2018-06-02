@@ -33,27 +33,25 @@
 #' @export
 #
 #
-# gwaa.data <- deer.abel
-# familyPedigree <- deer.famped
-# mend.errors <- NULL
-# analysisID <- "1a"
-# snplist <- snpnames(gwaa.data[,chromosome(gwaa.data) ==1])
+
+# snplist = NULL
 # chr = NULL
 # is.X = FALSE
 # is.Z = FALSE
 # pseudoautoSNPs = NULL
-# use.mnd <- TRUE
-# outdir = "crimap"
+# use.mnd = FALSE
+# use.specific.mnd = NULL
+# outdir = NULL
 # verbose = TRUE
 # clear.existing.analysisID = TRUE
+# dummy.mother.id = NULL
+# dummy.father.id = NULL
 #
-# gwaa.data = deer.abel
-# snplist = snp.list
-# familyPedigree = deer.famped
-# analysisID = "2a"
-# outdir = "crimap"
-# clear.existing.analysisID = TRUE
-# use.mnd = TRUE
+# gwaa.data <- deer.abel
+# familyPedigree <- deer.famped
+# analysisID <- "1a"
+# dummy.mother.id = c(8888, 9999)
+# dummy.father.id = NULL
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Create Crimap Files
@@ -129,7 +127,7 @@ create_crimap_input <- function(gwaa.data,
 
         del.vec <- del.vec[-which(del.vec == paste0("chr", analysisID, ".mndverbose"))]
 
-        }
+      }
 
     }
 
@@ -191,7 +189,9 @@ create_crimap_input <- function(gwaa.data,
 
   #~~ Subset gwaa.data to include only individuals which are within the pedigree provided
 
-  gwaa.data <- gwaa.data[which(idnames(gwaa.data) %in% c(familyPedigree[,1], familyPedigree[,2], familyPedigree[,3])),]
+  ids.keep <- idnames(gwaa.data)[which(idnames(gwaa.data) %in% c(familyPedigree[,1], familyPedigree[,2], familyPedigree[,3]))]
+
+  gwaa.data <- gwaa.data[ids.keep,]
 
   #~~ Recode ACGT as 1234 with space delimited between alleles
 
@@ -236,11 +236,15 @@ create_crimap_input <- function(gwaa.data,
   temp.geno$SEX <- phdata(gwaa.data)$sex
 
   if(!is.null(dummy.father.id)){
-    temp.geno <- rbind(temp.geno, c(rep("0 0", times = length(locus.names)), dummy.father.id, 1))
+    for(i in 1:length(dummy.father.id)){
+      temp.geno <- rbind(temp.geno, c(rep("0 0", times = length(locus.names)), dummy.father.id[i], 1))
+    }
   }
 
   if(!is.null(dummy.mother.id)){
-    temp.geno <- rbind(temp.geno, c(rep("0 0", times = length(locus.names)), dummy.mother.id, 0))
+    for(i in 1:length(dummy.mother.id)){
+      temp.geno <- rbind(temp.geno, c(rep("0 0", times = length(locus.names)), dummy.mother.id[i], 0))
+    }
   }
 
 

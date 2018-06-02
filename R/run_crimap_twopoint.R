@@ -22,8 +22,7 @@ run_crimap_twopoint <- function(genfile){
   if(Sys.info()["sysname"] == "Windows") {
     crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
 
-    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = F)
-    system("cmd", input = paste0("del chr", crimap.stem, "_*.cg"), show.output.on.console = F)
+    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " twopoint > chr", crimap.stem, ".tpt"), show.output.on.console = F)
 
 
   } else {

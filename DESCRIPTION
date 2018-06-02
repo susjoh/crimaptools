@@ -10,5 +10,5 @@ Description: Tools for preparing files and parsing output for the programme Cri-
 Depends: R (>= 3.2.0)
 License: MIT
 LazyData: TRUE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Imports: GenABEL, data.table, plyr
