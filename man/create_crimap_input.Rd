@@ -7,7 +7,8 @@
 create_crimap_input(gwaa.data, familyPedigree, analysisID, snplist = NULL,
   chr = NULL, is.X = FALSE, is.Z = FALSE, pseudoautoSNPs = NULL,
   use.mnd = FALSE, use.specific.mnd = NULL, outdir = NULL,
-  verbose = TRUE, clear.existing.analysisID = TRUE)
+  verbose = TRUE, clear.existing.analysisID = TRUE,
+  dummy.mother.id = NULL, dummy.father.id = NULL)
 }
 \arguments{
 \item{gwaa.data}{GenABEL gwaa.data object containing genomic data}
@@ -47,8 +48,11 @@ the output file should be written.}
 \item{clear.existing.analysisID}{Logical, default is TRUE. Overwrites .gen
 file and deletes crimap files that have the analysisID in the target
 directory.}
+
+\item{dummy.parent.id}{numeric. This is an identifier for IDs that should
+be filled in with blank genotypes, for example, because CRIMAP cannot deal
+with a single parent.}
 }
 \description{
 create_crimap_input: Create a CriMAP input file.
 }
-

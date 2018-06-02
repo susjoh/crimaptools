@@ -14,4 +14,3 @@ repeated within and between families if necessary.}
 \description{
 format_family_pedigree: Format the family pedigree for constistency
 }
-

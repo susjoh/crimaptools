@@ -18,4 +18,3 @@ switch_position_cmpstring: function to pull out chromosome segments of
 different grandparental origin. Used within the function
 check_double_crossovers
 }
-

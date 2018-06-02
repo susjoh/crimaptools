@@ -12,4 +12,3 @@ deer.ped
 Pedigree of 14 Red Deer (Cervus Elaphus) on the Isle of Rum, Scotland.
 }
 \keyword{datasets}
-

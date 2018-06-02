@@ -12,4 +12,3 @@ parse_loc(locfile)
 \description{
 parse_loc: Parse output from CriMAP .loc files
 }
-

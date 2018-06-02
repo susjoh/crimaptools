@@ -13,4 +13,3 @@ loci from chrompic output}
 \description{
 SingletonStatusFunc: Flag if there is a double crossover spanning a single SNP
 }
-

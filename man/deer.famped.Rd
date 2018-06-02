@@ -12,4 +12,3 @@ deer.famped
 CriMAP pedigrees of Red Deer (Cervus Elaphus) on the Isle of Rum, Scotland.
 }
 \keyword{datasets}
-

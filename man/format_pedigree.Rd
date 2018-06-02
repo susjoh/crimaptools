@@ -21,4 +21,3 @@ is equivalent for for first 5 to 6 columns of a PLINK .ped file.}
 format_pedigree: Format Pedigree
 This function formats the pedigree for downstream analysis.
 }
-

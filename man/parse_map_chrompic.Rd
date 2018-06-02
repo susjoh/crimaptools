@@ -12,4 +12,3 @@ parse_map_chrompic(chrompicfile)
 \description{
 parse_map_chrompic: Parse map from CriMAP chrompic output
 }
-

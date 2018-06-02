@@ -19,4 +19,3 @@ check_double_crossovers: Split chromosomes into segments of runs of SNPs
 inherited from particular grandparents. Used as quality control to determine
 double crossovers over short genomic distances.
 }
-

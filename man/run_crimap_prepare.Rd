@@ -20,4 +20,3 @@ run_crimap_prepare(genfile, build = FALSE, snplist = NULL,
 NB. This function will delete all files associated with the
 analysis suffix, except the .gen file.
 }
-

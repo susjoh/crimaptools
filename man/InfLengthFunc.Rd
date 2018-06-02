@@ -14,4 +14,3 @@ InfLengthFunc(CMPstring, position = "First")
 \description{
 InfLengthFunc: Determine positions of first and last informative loci from chrompic output
 }
-

@@ -12,4 +12,3 @@ parse_map(mapfile)
 \description{
 parse_map: Parse map from CriMAP map output
 }
-

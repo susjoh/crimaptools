@@ -14,4 +14,3 @@ parse_built_insert(buildfile, snpinsert)
 \description{
 parse_build_insert: Parse crossover information from CriMAP chrompic output
 }
-

@@ -13,4 +13,3 @@ loci from chrompic output}
 \description{
 RecCountFunc: Determine recombination count from chrompic output strings
 }
-

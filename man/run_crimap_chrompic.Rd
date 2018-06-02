@@ -12,4 +12,3 @@ run_crimap_chrompic(genfile)
 \description{
 run_crimap_chrompic: Run chrompic in crimap
 }
-

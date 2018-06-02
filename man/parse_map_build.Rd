@@ -12,4 +12,3 @@ parse_map_build(buildfile)
 \description{
 parse_map_build: Parse map from CriMAP chrompic output
 }
-

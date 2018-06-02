@@ -12,4 +12,3 @@ deer.abel
 SNP genotype data from Red Deer (Cervus Elaphus) on the Isle of Rum, Scotland.
 }
 \keyword{datasets}
-

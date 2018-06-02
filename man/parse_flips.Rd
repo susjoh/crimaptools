@@ -12,4 +12,3 @@ parse_flips(flipsfile)
 \description{
 parse_flips: Parse output from CriMAP flips
 }
-

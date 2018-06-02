@@ -18,4 +18,3 @@ values that should be removed}
 revise_double_crossovers: remove erroneously phased loci from parsed
 crossover data.
 }
-

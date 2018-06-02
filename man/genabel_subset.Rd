@@ -18,4 +18,3 @@ genabel_subset(gwaa.data, chr = NULL, ped = NULL, snplist = NULL)
 \description{
 genabel_subset: Subset a genabel dataset based on specified criteria.
 }
-

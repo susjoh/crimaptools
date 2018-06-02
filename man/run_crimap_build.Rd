@@ -14,4 +14,3 @@ run_crimap_build(genfile, PLT = NULL)
 \description{
 run_crimap_build: Run chrompic in crimap
 }
-

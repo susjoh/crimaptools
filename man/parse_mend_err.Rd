@@ -4,7 +4,9 @@
 \alias{parse_mend_err}
 \title{parse_mend_err: Parse output from CriMAP .loc files}
 \usage{
-parse_mend_err(prefile, genfile, save.mendfile = TRUE, familyPedigree)
+parse_mend_err(prefile, genfile, save.mendfile = TRUE, familyPedigree,
+  is.X = FALSE, is.Z = FALSE, pseudoautoSNPs = NULL,
+  genabel.phdata = NULL)
 }
 \arguments{
 \item{prefile}{.pre file (output from prepare function)}
@@ -16,8 +18,19 @@ parse_mend_err(prefile, genfile, save.mendfile = TRUE, familyPedigree)
 \item{familyPedigree}{data.frame containing columns ANIMAL, FATHER, MOTHER
 and FAMILY. FAMILY defines family groups for crimap. IDs in ANIMAL can be
 repeated within and between families if necessary.}
+
+\item{is.X}{logical. If true, then Mendelian errors are dealt with
+differently for the homogametic sex (see below).}
+
+\item{is.Z}{logical. If true, then Mendelian errors are dealt with
+differently for the homogametic sex (see below).}
+
+\item{pseudoautoSNPs}{Character vector of pseudoautosomal SNP IDs. Only used
+if is.X or is.Z == TRUE.}
+
+\item{genabel.phdata}{GenABEL phdata object, or data frame with fields
+information on "id" and sex"}
 }
 \description{
 parse_mend_err: Parse output from CriMAP .loc files
 }
-

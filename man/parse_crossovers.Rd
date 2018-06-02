@@ -20,4 +20,3 @@ informative loci.}
 \description{
 parse_crossovers: Parse crossover information from CriMAP chrompic output
 }
-

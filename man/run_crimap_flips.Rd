@@ -14,4 +14,3 @@ run_crimap_flips(genfile, flips = 2)
 \description{
 run_crimap_flips: Run flips
 }
-
