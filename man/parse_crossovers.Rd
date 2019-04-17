@@ -4,7 +4,8 @@
 \alias{parse_crossovers}
 \title{parse_crossovers: Parse crossover information from CriMAP chrompic output}
 \usage{
-parse_crossovers(chrompicfile, familyPedigree, remove.zero.inf.loci = TRUE)
+parse_crossovers(chrompicfile, familyPedigree,
+  remove.zero.inf.loci = TRUE)
 }
 \arguments{
 \item{chrompicfile}{File with output from chrompic}

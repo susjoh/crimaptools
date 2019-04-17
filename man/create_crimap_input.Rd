@@ -4,10 +4,10 @@
 \alias{create_crimap_input}
 \title{create_crimap_input: Create a CriMAP input file.}
 \usage{
-create_crimap_input(gwaa.data, familyPedigree, analysisID, snplist = NULL,
-  chr = NULL, is.X = FALSE, is.Z = FALSE, pseudoautoSNPs = NULL,
-  use.mnd = FALSE, use.specific.mnd = NULL, outdir = NULL,
-  verbose = TRUE, clear.existing.analysisID = TRUE,
+create_crimap_input(gwaa.data, familyPedigree, analysisID,
+  snplist = NULL, chr = NULL, is.X = FALSE, is.Z = FALSE,
+  pseudoautoSNPs = NULL, use.mnd = FALSE, use.specific.mnd = NULL,
+  outdir = NULL, verbose = TRUE, clear.existing.analysisID = TRUE,
   dummy.mother.id = NULL, dummy.father.id = NULL)
 }
 \arguments{
