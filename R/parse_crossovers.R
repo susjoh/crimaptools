@@ -10,24 +10,23 @@
 #' @export
 
 
+
+
 parse_crossovers <- function(chrompicfile, familyPedigree, remove.zero.inf.loci = TRUE){
+
   #~~ read lines from the chrompic file
 
   x <- readLines(chrompicfile)
 
   nmarkers <- nrow(parse_map_chrompic(chrompicfile))
 
-  x <- x[1:grep("Sex_averaged", x)]
+  x <- x[grep("Family", x)[1]:(grep("Overall recombinations", x)-1)]
+  x <- x[-grep("^Recombinations ", x)]
+  x <- x[-grep("^Non-recombinations ", x)]
+  x <- x[-grep("^Chromosomes ", x)]
+  x <- x[-which(x == "")]
+  x <- x[-grep("        ", x)]
 
-  rowstokeep <- sort(c(grep("^ ", x),
-                       grep("phase likelihood", x)))
-
-  x <- x[rowstokeep]
-  if(nmarkers < 101) x <- x[-c(1:nmarkers)]
-  if(nmarkers > 100) x <- x[-c(1:100)]
-
-
-  x <- x[-grep("         ", x)]
 
   #~~ create a table with family information to add to the full table later
 
@@ -44,6 +43,8 @@ parse_crossovers <- function(chrompicfile, familyPedigree, remove.zero.inf.loci 
 
   famtab$Count <- diff(c(famtab$startline, (length(x) + 1)))
 
+  table(famtab$Count)
+
   famvec <- rep(famtab$FamilyShortID, famtab$Count)
 
   #~~ create a data frame to put all information in
@@ -54,8 +55,6 @@ parse_crossovers <- function(chrompicfile, familyPedigree, remove.zero.inf.loci 
                             parent = NA,
                             Family = famvec,
                             stringsAsFactors=F)
-
-  
 
 
   #~~ Get the IDs
@@ -68,16 +67,13 @@ parse_crossovers <- function(chrompicfile, familyPedigree, remove.zero.inf.loci 
       return(z[2])
     }
   }))
-  
+
   recombframe$parent[which(recombframe$ANIMAL != "")] <- "MOTHER"
   recombframe$ANIMAL[which(recombframe$ANIMAL == "")] <- recombframe$ANIMAL[which(recombframe$ANIMAL != "")]
   recombframe$parent[which(is.na(recombframe$parent))] <- "FATHER"
 
-
-
   #~~ get the number of recombinations for each individual
 
-  
   recExtract <- function(CMPstring){
     x <- strsplit(CMPstring, split = " ")[[1]][length(strsplit(CMPstring, split = " ")[[1]])]
   }
