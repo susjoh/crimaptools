@@ -25,7 +25,7 @@ parse_crossovers <- function(chrompicfile, familyPedigree, remove.zero.inf.loci 
   x <- x[-grep("^Non-recombinations ", x)]
   x <- x[-grep("^Chromosomes ", x)]
   x <- x[-which(x == "")]
-  x <- x[-grep("        ", x)]
+  if (length(grep("        ", x) > 0)) x <- x[-grep("        ", x)]
 
 
   #~~ create a table with family information to add to the full table later
