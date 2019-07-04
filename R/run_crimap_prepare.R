@@ -113,7 +113,10 @@ run_crimap_prepare <- function(genfile, build = FALSE, snplist = NULL, snpinsert
   } else {
     
     if(Sys.info()["sysname"] == "Linux"){
-      crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
+      crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/linux/crimap")
+      if(!file.exists(crimap.path)){
+         crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
+      }
     } else {
       crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/macos/crimap")
     }
