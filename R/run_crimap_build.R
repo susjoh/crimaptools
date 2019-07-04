@@ -19,12 +19,12 @@ run_crimap_build <- function(genfile, PLT = NULL){
   crimap.stem <- gsub("^chr", "", crimap.file[length(crimap.file)])
   crimap.stem <- gsub(".gen$", "", crimap.stem)
 
-#   if(!paste0("chr", crimap.stem, ".ord") %in% dir()){
-#
-#     setwd(pwd)
-#     stop("Requires ord file - use run_crimap_prepare with build = TRUE")
-#
-#   }
+  #   if(!paste0("chr", crimap.stem, ".ord") %in% dir()){
+  #
+  #     setwd(pwd)
+  #     stop("Requires ord file - use run_crimap_prepare with build = TRUE")
+  #
+  #   }
 
   bld.run <- 1
 
@@ -53,7 +53,10 @@ run_crimap_build <- function(genfile, PLT = NULL){
   } else {
 
     if(Sys.info()["sysname"] == "Linux"){
-      crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
+      crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/linux/crimap")
+      if(!file.exists(crimap.path)){
+        crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/linux/crimap")
+      }
     } else {
       crimap.path <- paste0(.libPaths()[length(.libPaths())], "/crimaptools/bin/macos/crimap")
     }
