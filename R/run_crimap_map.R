@@ -29,7 +29,8 @@ run_crimap_map <- function(genfile, crimap.path = NULL){
   if(Sys.info()["sysname"] == "Windows") {
     if(is.null(crimap.path)){
       crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
-    }    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " build > chr", crimap.stem, ".map"), show.output.on.console = F)
+    }
+    system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " build > chr", crimap.stem, ".map"), show.output.on.console = F)
 
   } else {
     if(Sys.info()["sysname"] == "Linux"){
