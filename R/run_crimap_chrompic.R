@@ -4,7 +4,7 @@
 #' @export
 
 
-run_crimap_chrompic <- function(genfile){
+run_crimap_chrompic <- function(genfile, crimap.path = NULL){
 
   #~~ parse crimap.file if in another directory
   pwd <- getwd()
@@ -20,8 +20,9 @@ run_crimap_chrompic <- function(genfile){
 
 
   if(Sys.info()["sysname"] == "Windows") {
-    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
-
+    if(is.null(crimap.path)){
+      crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
+    }
     system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " chrompic > chr", crimap.stem, ".cmp"), show.output.on.console = F)
     system("cmd", input = paste0("del chr", crimap.stem, "_*.cg"), show.output.on.console = F)
 

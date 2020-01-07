@@ -5,7 +5,7 @@
 #' @export
 
 
-run_crimap_build <- function(genfile, PLT = NULL){
+run_crimap_build <- function(genfile, PLT = NULL, crimap.path = NULL){
 
   #~~ parse crimap.file if in another directory
   pwd <- getwd()
@@ -46,7 +46,10 @@ run_crimap_build <- function(genfile, PLT = NULL){
 
   if(Sys.info()["sysname"] == "Windows") {
 
-    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
+    if(is.null(crimap.path)){
+      crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
+    }
+
     system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " build > chr", crimap.stem, ".bld", bld.run), show.output.on.console = F)
 
 

@@ -4,7 +4,7 @@
 #' @export
 
 
-run_crimap_twopoint <- function(genfile){
+run_crimap_twopoint <- function(genfile, crimap.path = NULL){
 
   #~~ parse crimap.file if in another directory
   pwd <- getwd()
@@ -20,8 +20,9 @@ run_crimap_twopoint <- function(genfile){
 
 
   if(Sys.info()["sysname"] == "Windows") {
-    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
-
+    if(is.null(crimap.path)){
+      crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
+    }
     system("cmd", input = paste0("\"", crimap.path, "\" ", crimap.stem, " twopoint > chr", crimap.stem, ".tpt"), show.output.on.console = F)
 
 

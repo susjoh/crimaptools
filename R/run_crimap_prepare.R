@@ -12,7 +12,7 @@
 
 
 
-run_crimap_prepare <- function(genfile, build = FALSE, snplist = NULL, snpinsert = NULL){
+run_crimap_prepare <- function(genfile, build = FALSE, snplist = NULL, snpinsert = NULL, crimap.path = NULL){
 
   if(!is.null(snplist) & build == FALSE){
     message("snplist is specified - changed to build = TRUE")
@@ -95,8 +95,9 @@ run_crimap_prepare <- function(genfile, build = FALSE, snplist = NULL, snpinsert
   }
 
   if(Sys.info()["sysname"] == "Windows") {
-    crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
-
+    if(is.null(crimap.path)){
+      crimap.path <- paste0(.libPaths()[1], "/crimaptools/bin/windows64/crimap2504.exe")
+    }
     if(length(del.vec) > 0){
 
       for(i in del.vec){
